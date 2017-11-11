@@ -24,9 +24,11 @@
             /*$wwww=News::getColumnName();
             var_dump($wwww);
             var_dump("</br>");
-            var_dump("</br>");*/
+            var_dump("</br>");
+            "id"=> 6,
+            */
 
-        $wwww=News::saveRecord(["id"=> 6,"name"=> 'Катюша2',"login_autor" =>'log6',
+        $wwww=News::saveRecord(["name"=> 'Катюша5',"login_autor" =>'log6',
             "data_create" => '2017-10-31 22:55:36', "text_news" =>'Cat is walking,',
             "verified_admin" =>1, "rating" =>0]);
         var_dump($wwww);
@@ -36,7 +38,9 @@
             "verified_admin" =>1, "rating" =>0]);
         var_dump($wwww);
         var_dump("</br>");*/
-
+        $wwww=News::deleteById(38);
+        var_dump($wwww);
+        var_dump("</br>");
 
         ?>
 	</body>

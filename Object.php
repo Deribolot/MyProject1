@@ -148,7 +148,8 @@ abstract class Object
             //Если уникальные поля не существуют
             //проверка на существование кортежей, на которые делаются ссылки
             var_dump(" Передан для добавления");
-            return $class::addRecord($paramsForSave);}
+            return $class::addRecord($paramsForSave);
+        }
         else {
             var_dump(" Данные для сохранения неполные или неверные!");
             return false;
@@ -159,7 +160,6 @@ abstract class Object
     protected static function updateRecord($params = [])
     {
         try {
-            //$sql_add = "UPDATE Materials SET code='$code',name='$name',gost='$gost' WHERE code='$var'";
             $str="";
             $class = get_called_class();
             $table = $class::TableName();
@@ -172,10 +172,8 @@ abstract class Object
                     $str= "";
                 (($column_name !=0)&&($column_name !=(count(array_keys($params))-1)))? $str= $str.", ":$str= $str;
             }
-            var_dump($str);
             $oQuery = Object::$db->prepare("UPDATE {$table} SET  {$str} WHERE id=:need_id");
             $oQuery->execute(['need_id' => ($params[id])]);
-            var_dump("Обновлено");
             return true;
         }catch (PDOException $e) {
             var_dump("Ошибка при обновлении");
@@ -192,7 +190,6 @@ abstract class Object
             $values = "'" . implode("', '", array_values($params)) . "'";
             $oQuery = Object::$db->prepare("INSERT INTO {$table} ({$columns}) VALUES ({$values})");
             $oQuery->execute();
-            var_dump("Добавлено");
             return true;
         }catch (PDOException $e) {
             var_dump("Ошибка при добавлении");
@@ -205,9 +202,16 @@ abstract class Object
         /** @var Object $class */
         $class = get_called_class();
         $table = $class::TableName();
-        $oQuery = Object::$db->prepare("DELETE FROM {$table} WHERE id=:need_id");
-        $oQuery->execute(['need_id' => $id]);
-
+        if ($class::findById($id) ) {
+            var_dump("Передан для удаления");
+            $oQuery = Object::$db->prepare("DELETE FROM {$table} WHERE id=:need_id");
+            $oQuery->execute(['need_id' => $id]);
+            return !($class::findById($id))? true: false ;
+        }
+        else {
+            var_dump("Записи с таким ключом не существует, поэтому ее нельзя удалить!");
+            return false;
+        }
     }
 }
 
