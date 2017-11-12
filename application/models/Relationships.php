@@ -1,9 +1,13 @@
 <?php
-
+/**
+ * Class Relationships
+ * @property int $id_news
+ * @property int $id_categories
+ */
 class Relationships extends Object
 {
-    protected $id_news;
-    protected $id_categories;
+    //protected $id_news;
+    //protected $id_categories;
 
     static  function TableName()
     {

@@ -1,8 +1,10 @@
 <?php
-
+/**
+ * Class Object
+ * @property $id
+ */
 abstract class Object
 {
-
     /** @var  PDO */
     static $db;
 
@@ -39,17 +41,18 @@ abstract class Object
         return $this->setValueForParam('id',$id);
     }
 
-
-    public function __construct($params = [])
+    public function __construct( $params = [])
     {
         $className = get_called_class();
-        foreach ($params as $param_name => $param_value)
-        {
+        foreach ($params as $param_name => $param_value){
             //содержит ли объект или класс указанный атрибут
-            if (property_exists($className, $param_name))
-            {
+            if (property_exists($className, $param_name ))
                 $this->$param_name = $param_value;
+            elseif(method_exists($this,'set'.ucfirst($param_name) )){
+                $name = 'set'.ucfirst($param_name);
+                $this->$name($param_value);
             }
+
         }
     }
 
@@ -81,6 +84,10 @@ abstract class Object
 
     abstract static function TableName();
 
+    /**
+     * @param integer $id
+     * @return $this|null
+     */
     public static function findById($id){
 
         /** @var Object $class */
@@ -95,6 +102,9 @@ abstract class Object
         return $aRes? new $class($aRes):null;
     }
 
+    /**
+     * @return mixed $columnNames|null
+     */
     public static function getColumnName()
     {
         try {

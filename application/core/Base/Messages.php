@@ -1,13 +1,21 @@
 <?php
-
+/**
+ * Class Messages
+ *  @property $id
+ *  @property string $login_autor
+ *  @property string $data_create
+ *  @property string $text
+ *  @property bool $verified_admin
+ *  @property int $rating
+ */
 class Messages extends Object
 {
-    protected $id;
-    protected $login_autor;
-    protected $data_create;
-    protected $text;
-    protected $verified_admin;
-    protected $rating;
+    //protected $id;
+    //protected $login_autor;
+    //protected $data_create;
+    //protected $text;
+    //protected $verified_admin;
+    //protected $rating;
 
     static  function TableName()
     {

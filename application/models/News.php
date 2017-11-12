@@ -1,7 +1,11 @@
 <?php
+/**
+ * Class News
+ * @property string $name
+ */
 class News extends Messages
 {
-    protected $name;
+    //protected $name;
 
     static  function TableName()
     {

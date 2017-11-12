@@ -1,8 +1,11 @@
 <?php
-
+/**
+ * Class Comments
+ * @property int $id_news
+ */
 class Comments extends Messages
 {
-    protected $id_news;
+    //protected $id_news;
 
     static  function TableName()
     {

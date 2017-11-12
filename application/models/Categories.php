@@ -1,9 +1,14 @@
 <?php
 
+/**
+ * Class Categories
+ * @property string $name
+ * @property bool $verified_admin;
+ */
 class Categories extends Object
 {
-    protected $name;
-    protected $verified_admin;
+    //protected $name;
+    //protected $verified_admin;
 
     static  function TableName()
     {

@@ -1,14 +1,25 @@
 <?php
- class Users extends Object
+/**
+ * Class Users
+ * @property  string $login
+ * @property  string $email
+ * @property  string $user_password
+ * @property  string $data_checkin
+ * @property  bool $admin_rights
+ * @property  string $data_assumption
+ * @property  bool $locking
+ */
+
+class Users extends Object
  {
 
-    protected $login;
-    protected $email;
-    protected $user_password;
-    protected $data_checkin;
-    protected $admin_rights;
-    protected $data_assumption;
-    protected $locking;
+    /*protected $login;
+    *protected $email;
+    *protected $user_password;
+    *protected $data_checkin;
+    *protected $admin_rights;
+    *protected $data_assumption;
+    *protected $locking;*/
 
     static  function TableName(){
          return 'users';
@@ -47,7 +58,7 @@
          return $this->setValueForParam('email',$email);
      }
      /**
-      * @return int
+      * @return string
       */
      public function getUser_password()
      {
@@ -55,7 +66,7 @@
      }
 
      /**
-      * @param int $user_password
+      * @param string $user_password
       * @return $this
       */
      public function setUser_password($user_password)
