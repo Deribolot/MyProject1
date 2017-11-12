@@ -1,12 +1,12 @@
 <?
-    require('DBConnect.php');
-    require('Object.php');
-    require('Users.php');
-    require('Messages.php');
-    require('News.php');
-    require('Comments.php');
-    require('Categories.php');
-    require('Relationships.php');
+    require('application/core/Base/Object.php');
+    require('application/core/Base/Messages.php');
+    require('application/models/Users.php');
+    require('application/models/News.php');
+    require('application/models/Comments.php');
+    require('application/models/Categories.php');
+    require('application/models/Relationships.php');
+    require('application/DBConnect.php');
     header("Content-Type: text/html; charset=utf-8");
 ?>
 
@@ -32,8 +32,23 @@
             "id"=> 6,
             */
 
-        $wwww=News::saveRecord(["name"=> 'Катюша5',"login_autor" =>'log6',
-            "data_create" => '2017-10-31 22:55:36', "text_news" =>'Cat is walking,',
+        /*$wwww=News::saveRecord(["name"=> 'Катюша99998',"login_autor" =>'log6',
+            "data_create" => '2017-10-31 22:55:36', "text" =>'Cat is walking,',
+            "verified_admin" =>1, "rating" =>0]);
+        var_dump($wwww);
+        var_dump("</br>");
+        $wwww=News::saveRecord(["name"=> 'Катюша99998',"login_autor" =>'log6',
+            "data_create" => '2017-10-31 22:55:36', "text" =>'Cat is walking,',
+            "verified_admin" =>1, "rating" =>0]);
+        var_dump($wwww);
+        var_dump("</br>");*/
+        $wwww=News::saveRecord(["id"=>45,"name"=> 'Катюша888887',"login_autor" =>'log6',
+            "data_create" => '2017-10-31 22:55:36', "text" =>'Cat is walking,',
+            "verified_admin" =>1, "rating" =>0]);
+        var_dump($wwww);
+        var_dump("</br>");
+        $wwww=News::saveRecord(["id"=>45,"name"=> 'Катюша88888555',"login_autor" =>'log6',
+            "data_create" => '2017-10-31 22:55:36', "text" =>'Cat is walking,',
             "verified_admin" =>1, "rating" =>0]);
         var_dump($wwww);
         var_dump("</br>");
@@ -41,10 +56,10 @@
             "data_create" => '2017-10-31 22:55:36', "text_news" =>'Cat is walking,',
             "verified_admin" =>1, "rating" =>0]);
         var_dump($wwww);
-        var_dump("</br>");*/
+        var_dump("</br>");
         $wwww=News::deleteById(38);
         var_dump($wwww);
-        var_dump("</br>");
+        var_dump("</br>");*/
 
         ?>
 	</body>

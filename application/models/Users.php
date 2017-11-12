@@ -25,6 +25,24 @@ class Users extends Object
          return 'users';
      }
 
+    static  function CheckForUniqueness($params = []){
+        $class = get_called_class();
+        $table = $class::TableName();
+        if (array_key_exists('id',$params)) {
+            $oQuery = Object::$db->prepare("SELECT * FROM {$table} WHERE email=:need_email AND login!=:need_login");
+            $oQuery->execute(['need_email' => $params['email'],'need_login' => $params['login']]);
+            $aRes = $oQuery->fetchAll(PDO::FETCH_ASSOC);
+            return $aRes? false:true;
+
+        }
+        else {
+            $oQuery = Object::$db->prepare("SELECT * FROM {$table} WHERE email=:need_email");
+            $oQuery->execute(['need_email' => $params['email']]);
+            $aRes = $oQuery->fetchAll(PDO::FETCH_ASSOC);
+            return $aRes? false:true;
+        }
+    }
+
      /**
       * @return string
       */

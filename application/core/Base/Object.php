@@ -84,12 +84,29 @@ abstract class Object
 
     abstract static function TableName();
 
+    static  function CheckForUniqueness($params = []){
+        $class = get_called_class();
+        $table = $class::TableName();
+        if (array_key_exists('id',$params)) {
+            $oQuery = Object::$db->prepare("SELECT * FROM {$table} WHERE name=:need_name AND id!=:need_id");
+            $oQuery->execute(['need_name' => $params['name'],'need_id' => $params['id']]);
+            $aRes = $oQuery->fetchAll(PDO::FETCH_ASSOC);
+            return $aRes? false:true;
+
+        }
+        else {
+            $oQuery = Object::$db->prepare("SELECT * FROM {$table} WHERE name=:need_name");
+            $oQuery->execute(['need_name' => $params['name']]);
+            $aRes = $oQuery->fetchAll(PDO::FETCH_ASSOC);
+            return $aRes? false:true;
+        }
+    }
+
     /**
      * @param integer $id
      * @return $this|null
      */
     public static function findById($id){
-
         /** @var Object $class */
         $class = get_called_class();
         $table = $class::TableName();
@@ -144,10 +161,15 @@ abstract class Object
         }
         if ((array_key_exists('id',$paramsForSave))&&(count($paramsForSave)==count($columnNames))) {
             if ($class::findById($paramsForSave['id']) ) {
-                //Если уникальные поля не совпадают с уникальными полями  других картежей
-                //проверка на существование кортежей, на которые делаются ссылки
-                var_dump(" Передан для обновления");
-                return $class::updateRecord($paramsForSave);
+                if ($class::CheckForUniqueness($paramsForSave)) {
+                    //проверка на существование кортежей, на которые делаются ссылки
+                    var_dump(" Передан для обновления");
+                    return $class::updateRecord($paramsForSave);
+                }
+                else{
+                    var_dump(" Не выполняется уникальность уникальных полей");
+                    return false;
+                }
             }
             else {
                 var_dump("Записи с таким ключом не существует! В обновлении отказать!");
@@ -155,10 +177,16 @@ abstract class Object
             }
         }
         elseif ((!(array_key_exists('id',$paramsForSave)))&&(count($paramsForSave)==(count($columnNames)-1))) {
-            //Если уникальные поля не существуют
-            //проверка на существование кортежей, на которые делаются ссылки
-            var_dump(" Передан для добавления");
-            return $class::addRecord($paramsForSave);
+            if ($class::CheckForUniqueness($paramsForSave)) {
+                //проверка на существование кортежей, на которые делаются ссылки
+                var_dump(" Передан для добавления  6");
+                return $class::addRecord($paramsForSave);
+            }
+            else
+            {
+                var_dump(" Не выполняется уникальность уникальных полей  5");
+                return false;
+            }
         }
         else {
             var_dump(" Данные для сохранения неполные или неверные!");

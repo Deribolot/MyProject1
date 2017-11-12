@@ -13,6 +13,11 @@ class Relationships extends Object
     {
         return 'comments';
     }
+
+    static  function CheckForUniqueness()
+    {
+        return true;
+    }
     /**
      * @param int $id_news
      * @return $this

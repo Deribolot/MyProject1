@@ -21,6 +21,7 @@ class Messages extends Object
     {
         return 'messages';
     }
+
     /**
      * @param string $login_autor
      * @return $this
