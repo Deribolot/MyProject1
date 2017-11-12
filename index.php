@@ -1,8 +1,12 @@
 <?
+    require('DBConnect.php');
     require('Object.php');
     require('Users.php');
+    require('Messages.php');
     require('News.php');
-	require('DBConnect.php');
+    require('Comments.php');
+    require('Categories.php');
+    require('Relationships.php');
     header("Content-Type: text/html; charset=utf-8");
 ?>
 

@@ -1,5 +1,6 @@
 <?php
- class Users extends Object{
+ class Users extends Object
+ {
 
     protected $login;
     protected $email;
