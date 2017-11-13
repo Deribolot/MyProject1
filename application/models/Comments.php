@@ -17,7 +17,20 @@ class Comments extends Messages
     }
     static function CheckExistence($params = [])
     {
-        return (Users::findById($params['login_autor'])&&News::findById($params['id_news']))? true:false;
+        if (Users::findById($params['login_autor'])&& News::findById($params['id_news'])){
+
+            $aRes=Users::findById($params['login_autor']);
+            if ($aRes->locking){
+                var_dump("Данный пользователь забанен!</br>");
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
+        else{
+            return false;
+        }
     }
     /**
      * @param int $id_news

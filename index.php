@@ -41,7 +41,7 @@
         var_dump('Пробую сохранить новость');
         var_dump('Пробую сохранить новость с несуществующим логином');
         var_dump("</br>");
-        $wwww=News::saveRecord(["id"=>45,"name"=> 'Уникальная 4',"login_autor" =>'Логин не существует',
+        $wwww=News::saveRecord(["id"=>45,"name"=> 'Уникальная 66',"login_autor" =>'Логин не существует',
             "data_create" => '2017-10-31 22:55:36', "text" =>'Cat is walking,',
             "verified_admin" =>1, "rating" =>0]);
         var_dump($wwww);
@@ -57,7 +57,7 @@
         var_dump("</br>");
         var_dump('Пробую сохранить новость с существующим логином');
         var_dump("</br>");
-        $wwww=News::saveRecord(["id"=>45,"name"=> 'Уникальная 4',"login_autor" =>'log6',
+        $wwww=News::saveRecord(["id"=>45,"name"=> 'Уникальная 66',"login_autor" =>'log6',
             "data_create" => '2017-10-31 22:55:36', "text" =>'Cat is walking,',
             "verified_admin" =>1, "rating" =>0]);
         var_dump($wwww);
@@ -70,7 +70,7 @@
             "verified_admin" =>1, "rating" =>0]);
         var_dump($wwww);
         var_dump("</br>");
-        var_dump("</br>");
+       /* var_dump("</br>");
         var_dump('Пробую добавить связь. Удачно');
         var_dump("</br>");
         $wwww=Relationships::saveRecord(["id_news"=> 45,"id_category" =>5]);
@@ -82,8 +82,11 @@
         $wwww=Relationships::saveRecord(["id_news"=> 55,"id_category" =>55]);
         var_dump($wwww);
         var_dump("</br>");
-
-
+        var_dump("</br>");*/
+       /* var_dump('Пробую удалить 4 категорию.');
+        $wwww=Categories::deleteById(4);
+        var_dump($wwww);
+        var_dump("</br>");*/
 
         ?>
 	</body>

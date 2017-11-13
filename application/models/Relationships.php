@@ -13,9 +13,14 @@ class Relationships extends Object
     {
         return 'relationships';
     }
-    static  function CheckUniqueness()
+    static  function CheckUniqueness($params = [])
     {
-        return true;
+        $class = get_called_class();
+        $table = $class::TableName();
+        $oQuery = Object::$db->prepare("SELECT * FROM {$table} WHERE id_news=:need_id_news AND id_category=:need_id_news");
+        $oQuery->execute(['need_id_news' => $params['id_news'],'need_id_news' => $params['category']]);
+        $aRes = $oQuery->fetchAll(PDO::FETCH_ASSOC);
+        return $aRes? false:true;
     }
     static function CheckExistence($params = [])
     {

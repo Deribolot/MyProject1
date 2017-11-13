@@ -176,7 +176,9 @@ class Users extends Object
              var_dump("Передан для удаления");
              $oQuery = Object::$db->prepare("DELETE FROM {$table} WHERE login=:need_login");
              $oQuery->execute(['need_login' => $login]);
-             return !($class::findById($login))? true: false ;
+             $aRes = $oQuery->fetch(PDO::FETCH_ASSOC);
+             var_dump("Получила $aRes ");
+             return ($class::findById($login))? false: true ;
          }
          else {
              var_dump("Записи с таким ключом не существует, поэтому ее нельзя удалить!");
@@ -201,10 +203,15 @@ class Users extends Object
          }
          if ((array_key_exists('login',$paramsForSave))&&(count($paramsForSave)==count($columnNames))) {
              if ($class::findById($paramsForSave['login']) ) {
-                 //Если уникальные поля не совпадают с уникальными полями  других картежей
-                 //проверка на существование кортежей, на которые делаются ссылки
-                 var_dump(" Передан для обновления");
-                 return $class::updateRecord($paramsForSave);
+                 if (($class::CheckUniqueness($paramsForSave))&&($class::CheckExistence($paramsForSave))) {
+                     var_dump(" Передан для обновления");
+                     return $class::updateRecord($paramsForSave);
+                 }
+                 else{
+                     var_dump(" Запись не может быть сохранена, по следующим причинам: </br> значения, которые должны быть уникальными, не являются таковыми; </br> 
+                            значения полей, являющиеся ссылками, не найдены или недоступны из-за наложенных ограничений.");
+                     return false;
+                 }
              }
              else {
                  var_dump("Записи с таким ключом не существует! В обновлении отказать!");
@@ -212,10 +219,15 @@ class Users extends Object
              }
          }
          elseif ((!(array_key_exists('login',$paramsForSave)))&&(count($paramsForSave)==(count($columnNames)-1))) {
-             //Если уникальные поля не существуют
-             //проверка на существование кортежей, на которые делаются ссылки
-             var_dump(" Передан для добавления");
-             return $class::addRecord($paramsForSave);
+             if (($class::CheckUniqueness($paramsForSave))&&($class::CheckExistence($paramsForSave))) {
+                 var_dump(" Передан для добавления");
+                 return $class::addRecord($paramsForSave);
+             }
+             else {
+                 var_dump(" Запись не может быть сохранена, по следующим причинам: </br> значения, которые должны быть уникальными, не являются таковыми; </br> 
+                            значения полей, являющиеся ссылками, не найдены или недоступны из-за наложенных ограничений.");
+                 return false;
+             }
          }
          else {
              var_dump(" Данные для сохранения неполные или неверные!");
