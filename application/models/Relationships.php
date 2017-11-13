@@ -11,12 +11,15 @@ class Relationships extends Object
 
     static  function TableName()
     {
-        return 'comments';
+        return 'relationships';
     }
-
-    static  function CheckForUniqueness()
+    static  function CheckUniqueness()
     {
         return true;
+    }
+    static function CheckExistence($params = [])
+    {
+        return (Categories::findById($params['id_category'])&&News::findById($params['id_news']))? true:false;
     }
     /**
      * @param int $id_news

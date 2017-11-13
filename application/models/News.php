@@ -11,6 +11,10 @@ class News extends Messages
     {
         return 'news';
     }
+    static function CheckExistence($params = [])
+    {
+        return Users::findById($params['login_autor'])? true:false;
+    }
     /**
      * @param string $name
      * @return $this

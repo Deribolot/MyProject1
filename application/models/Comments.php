@@ -11,9 +11,13 @@ class Comments extends Messages
     {
         return 'comments';
     }
-    static  function CheckForUniqueness()
+    static  function CheckUniqueness()
     {
         return true;
+    }
+    static function CheckExistence($params = [])
+    {
+        return (Users::findById($params['login_autor'])&&News::findById($params['id_news']))? true:false;
     }
     /**
      * @param int $id_news

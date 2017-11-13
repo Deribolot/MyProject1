@@ -19,9 +19,12 @@ class Messages extends Object
 
     static  function TableName()
     {
-        return 'messages';
+        return true;
     }
-
+    static function CheckExistence($params = [])
+    {
+        return true;
+    }
     /**
      * @param string $login_autor
      * @return $this
@@ -41,7 +44,7 @@ class Messages extends Object
      * @param string $data_create
      * @return $this
      */
-    public function setData_creater($data_create)
+    public function setData_create($data_create)
     {
         return $this->setValueForParam('data_create',$data_create);
     }

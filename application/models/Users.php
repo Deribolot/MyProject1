@@ -25,7 +25,7 @@ class Users extends Object
          return 'users';
      }
 
-    static  function CheckForUniqueness($params = []){
+    static  function CheckUniqueness($params = []){
         $class = get_called_class();
         $table = $class::TableName();
         if (array_key_exists('id',$params)) {
@@ -41,6 +41,10 @@ class Users extends Object
             $aRes = $oQuery->fetchAll(PDO::FETCH_ASSOC);
             return $aRes? false:true;
         }
+    }
+    static function CheckExistence($params = [])
+    {
+        return true;
     }
 
      /**

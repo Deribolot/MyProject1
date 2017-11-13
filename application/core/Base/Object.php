@@ -27,8 +27,7 @@ abstract class Object
     /**
      * @return mixed
      */
-    public function getId()
-    {
+    public function getId(){
         return $this->getValueFromParams('id');
     }
 
@@ -36,13 +35,11 @@ abstract class Object
      * @param mixed $id
      * @return $this
      */
-    public function setId($id)
-    {
+    public function setId($id){
         return $this->setValueForParam('id',$id);
     }
 
-    public function __construct( $params = [])
-    {
+    public function __construct( $params = []){
         $className = get_called_class();
         foreach ($params as $param_name => $param_value){
             //содержит ли объект или класс указанный атрибут
@@ -52,31 +49,26 @@ abstract class Object
                 $name = 'set'.ucfirst($param_name);
                 $this->$name($param_value);
             }
-
         }
     }
 
     //получить значение параметра $name
-    public function __get($name)
-    {
+    public function __get($name){
         //ucfirst - с большой буквы $name
         $sFuncName = 'get' . ucfirst($name);
         //содержит ли объект или класс указанный метод
-        if (method_exists($this, $sFuncName))
-        {
+        if (method_exists($this, $sFuncName)) {
             return $this->$sFuncName();
         }
         return null;
     }
 
     //присвоить значение параметра $name
-    public function __set($name, $value)
-    {
+    public function __set($name, $value){
         //ucfirst - с большой буквы $name
         $sFuncName = 'set' . ucfirst($name);
         //содержит ли объект или класс указанный метод
-        if (method_exists($this, $sFuncName))
-        {
+        if (method_exists($this, $sFuncName)) {
             return $this->$sFuncName($value);
         }
         return null;
@@ -84,7 +76,9 @@ abstract class Object
 
     abstract static function TableName();
 
-    static  function CheckForUniqueness($params = []){
+    abstract static function CheckExistence($params = []);
+
+    static  function CheckUniqueness($params = []){
         $class = get_called_class();
         $table = $class::TableName();
         if (array_key_exists('id',$params)) {
@@ -122,8 +116,7 @@ abstract class Object
     /**
      * @return mixed $columnNames|null
      */
-    public static function getColumnName()
-    {
+    public static function getColumnName(){
         try {
             $class = get_called_class();
             $table = $class::TableName();
@@ -144,8 +137,7 @@ abstract class Object
     }
 
     //сохранение записи
-    public static function saveRecord($params = [])
-    {
+    public static function saveRecord($params = []){
         //Если в $params будут элементы одинаковыми ключами, то сохранится последнее
         $class = get_called_class();
         $table = $class::TableName();
@@ -161,13 +153,12 @@ abstract class Object
         }
         if ((array_key_exists('id',$paramsForSave))&&(count($paramsForSave)==count($columnNames))) {
             if ($class::findById($paramsForSave['id']) ) {
-                if ($class::CheckForUniqueness($paramsForSave)) {
-                    //проверка на существование кортежей, на которые делаются ссылки
+                if (($class::CheckUniqueness($paramsForSave))&&($class::CheckExistence($paramsForSave))) {
                     var_dump(" Передан для обновления");
                     return $class::updateRecord($paramsForSave);
                 }
                 else{
-                    var_dump(" Не выполняется уникальность уникальных полей");
+                    var_dump(" Не выполняется уникальность уникальных полей, или  объектов, указанных в качестве параметров, не существует");
                     return false;
                 }
             }
@@ -177,14 +168,12 @@ abstract class Object
             }
         }
         elseif ((!(array_key_exists('id',$paramsForSave)))&&(count($paramsForSave)==(count($columnNames)-1))) {
-            if ($class::CheckForUniqueness($paramsForSave)) {
-                //проверка на существование кортежей, на которые делаются ссылки
-                var_dump(" Передан для добавления  6");
+            if (($class::CheckUniqueness($paramsForSave))&&($class::CheckExistence($paramsForSave))) {
+                var_dump(" Передан для добавления");
                 return $class::addRecord($paramsForSave);
             }
-            else
-            {
-                var_dump(" Не выполняется уникальность уникальных полей  5");
+            else {
+                var_dump(" Не выполняется уникальность уникальных полей, или  объектов, указанных в качестве параметров, не существует");
                 return false;
             }
         }
@@ -195,8 +184,7 @@ abstract class Object
     }
 
     //сохранение через обновление
-    protected static function updateRecord($params = [])
-    {
+    protected static function updateRecord($params = []){
         try {
             $str="";
             $class = get_called_class();

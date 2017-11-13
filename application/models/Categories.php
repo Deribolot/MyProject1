@@ -14,6 +14,10 @@ class Categories extends Object
     {
         return 'categories';
     }
+    static function CheckExistence($params = [])
+    {
+        return true;
+    }
     /**
      * @param string $name
      * @return $this
