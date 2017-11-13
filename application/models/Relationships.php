@@ -17,8 +17,8 @@ class Relationships extends Object
     {
         $class = get_called_class();
         $table = $class::TableName();
-        $oQuery = Object::$db->prepare("SELECT * FROM {$table} WHERE id_news=:need_id_news AND id_category=:need_id_news");
-        $oQuery->execute(['need_id_news' => $params['id_news'],'need_id_news' => $params['category']]);
+        $oQuery = Object::$db->prepare("SELECT * FROM {$table} WHERE id_news=:need_id_news AND id_category=:need_id_category");
+        $oQuery->execute(['need_id_news' => $params['id_news'],'need_id_category' => $params['id_category']]);
         $aRes = $oQuery->fetchAll(PDO::FETCH_ASSOC);
         return $aRes? false:true;
     }

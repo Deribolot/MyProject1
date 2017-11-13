@@ -37,7 +37,7 @@
 " array(7) { [0]=> string(2) "id" [1]=> string(7) "id_news" [2]=> string(11) "login_autor" [3]=> string(11) "data_create" [4]=> string(4) "text" [5]=> string(14) "verified_admin" [6]=> string(6) "rating" } string(5) "
 " array(3) { [0]=> string(2) "id" [1]=> string(7) "id_news" [2]=> string(11) "id_category" } string(5) "
         */
-        var_dump("</br>");
+        /*var_dump("</br>");
         var_dump('Пробую сохранить новость');
         var_dump('Пробую сохранить новость с несуществующим логином');
         var_dump("</br>");
@@ -69,20 +69,20 @@
             "data_create" => '2017-10-31 22:55:36', "text" =>'Cat is walking,',
             "verified_admin" =>1, "rating" =>0]);
         var_dump($wwww);
-        var_dump("</br>");
-       /* var_dump("</br>");
+        var_dump("</br>");*/
+       var_dump("</br>");
         var_dump('Пробую добавить связь. Удачно');
         var_dump("</br>");
-        $wwww=Relationships::saveRecord(["id_news"=> 45,"id_category" =>5]);
+        $wwww=Relationships::saveRecord(["id_news"=> 55,"id_category" =>1]);
         var_dump($wwww);
         var_dump("</br>");
         var_dump("</br>");
         var_dump('Пробую добавить связь. Недачно');
         var_dump("</br>");
-        $wwww=Relationships::saveRecord(["id_news"=> 55,"id_category" =>55]);
+        $wwww=Relationships::saveRecord(["id_news"=> 55,"id_category" =>1]);
         var_dump($wwww);
         var_dump("</br>");
-        var_dump("</br>");*/
+        var_dump("</br>");
        /* var_dump('Пробую удалить 4 категорию.');
         $wwww=Categories::deleteById(4);
         var_dump($wwww);
