@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Ноя 12 2017 г., 14:15
+-- Время создания: Ноя 22 2017 г., 01:45
 -- Версия сервера: 5.5.48
 -- Версия PHP: 5.5.33
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- База данных: `news`
 --
+CREATE DATABASE IF NOT EXISTS `news` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `news`;
 
 -- --------------------------------------------------------
 
@@ -40,7 +42,6 @@ INSERT INTO `categories` (`id`, `name`, `verified_admin`) VALUES
 (1, 'category1', 0),
 (2, 'category2', 0),
 (3, 'category3', 1),
-(4, 'category4', 0),
 (5, 'category5', 1);
 
 -- --------------------------------------------------------
@@ -57,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `text` varchar(500) NOT NULL,
   `verified_admin` tinyint(1) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `comments`
@@ -66,7 +67,28 @@ CREATE TABLE IF NOT EXISTS `comments` (
 INSERT INTO `comments` (`id`, `id_news`, `login_autor`, `data_create`, `text`, `verified_admin`, `rating`) VALUES
 (19, 4, 'log6', '2017-10-31 23:03:29', 'Cat is walking,', 0, 0),
 (20, 5, 'log7', '2017-10-31 23:03:29', 'Cat is walking,', 0, 0),
-(21, 6, 'log1', '2017-10-31 23:03:29', 'Cat is walking,', 1, 0);
+(21, 6, 'log1', '2017-10-31 23:03:29', 'Cat is walking,', 1, 0),
+(22, 45, 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(23, 45, 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(24, 45, 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(25, 45, 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(26, 45, 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(27, 45, 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(28, 45, 'log7', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(29, 45, 'log7', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(30, 45, 'log7', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(31, 45, 'log7', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(32, 45, 'log7', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(33, 45, 'log7', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(34, 45, 'log7', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(35, 45, 'log7', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(36, 45, 'log7', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(37, 45, 'log7', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(38, 45, 'log7', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(39, 45, 'log7', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(40, 45, 'log7', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(41, 45, 'log7', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(42, 45, 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -82,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `news` (
   `text` varchar(500) NOT NULL,
   `verified_admin` tinyint(1) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `news`
@@ -95,7 +117,11 @@ INSERT INTO `news` (`id`, `name`, `login_autor`, `data_create`, `text`, `verifie
 (7, 'Sat is walking,', 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
 (15, 'WWSat is walkin', 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
 (39, 'Катюша4', 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
-(43, 'Катюша5', 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0);
+(43, 'Катюша5', 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(45, 'Уникальная 66', 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(53, 'Катюша6666', 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(54, 'Катюша9999', 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(55, 'Катюша888887', 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -107,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `relationships` (
   `id` int(11) NOT NULL,
   `id_news` int(11) NOT NULL,
   `id_category` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `relationships`
@@ -116,7 +142,42 @@ CREATE TABLE IF NOT EXISTS `relationships` (
 INSERT INTO `relationships` (`id`, `id_news`, `id_category`) VALUES
 (1, 4, 1),
 (2, 5, 2),
-(3, 6, 3);
+(3, 6, 3),
+(4, 45, 5),
+(5, 45, 5),
+(6, 45, 5),
+(7, 45, 5),
+(8, 45, 5),
+(9, 45, 5),
+(10, 45, 5),
+(11, 45, 5),
+(12, 45, 5),
+(13, 45, 5),
+(14, 45, 5),
+(15, 45, 5),
+(16, 45, 5),
+(17, 45, 5),
+(18, 45, 5),
+(19, 45, 5),
+(20, 45, 5),
+(21, 45, 5),
+(22, 45, 5),
+(23, 45, 5),
+(24, 45, 5),
+(25, 45, 5),
+(26, 45, 5),
+(27, 45, 5),
+(28, 55, 5),
+(29, 55, 5),
+(30, 55, 5),
+(31, 55, 5),
+(32, 55, 5),
+(33, 55, 5),
+(34, 55, 5),
+(35, 55, 5),
+(36, 55, 5),
+(37, 55, 3),
+(38, 55, 1);
 
 -- --------------------------------------------------------
 
@@ -140,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`login`, `email`, `user_password`, `data_checkin`, `admin_rights`, `data_assumption`, `locking`) VALUES
 ('log1', 'log1@ya.ru', 'log1', '2017-10-31 22:41:04', 0, NULL, 0),
-('log2', 'log2@ya.ru', 'log1', '2017-10-31 22:41:41', 0, NULL, 0),
+('log2', 'log2@ya.ru', 'log1', '2017-10-31 22:41:41', 0, NULL, 1),
 ('log6', 'log6@ya.ru', 'log6', '2017-10-31 22:50:21', 1, '2017-10-31 22:50:21', 0),
 ('log7', 'log7@ya.ru', 'log7', '2017-10-31 22:50:21', 1, '2017-10-31 22:50:21', 0);
 
@@ -201,17 +262,17 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT для таблицы `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=43;
 --
 -- AUTO_INCREMENT для таблицы `news`
 --
 ALTER TABLE `news`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=44;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=56;
 --
 -- AUTO_INCREMENT для таблицы `relationships`
 --
 ALTER TABLE `relationships`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=39;
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
