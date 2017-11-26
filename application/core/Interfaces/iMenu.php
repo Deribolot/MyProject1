@@ -9,7 +9,9 @@
 interface iMenu
 {
     /**
+     * @param $mylittleuser
+     * @param $verified_admin
      * @return array
      */
-    function getData($user);
+    function getData($mylittleuser,$verified_admin);
 }

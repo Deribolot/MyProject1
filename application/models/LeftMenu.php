@@ -8,21 +8,52 @@
 
 class LeftMenu implements iMenu
 {
-    function getData($user)
+    function getData($mylittleuser,$verified_admin=null)
     {
-        if (!$user)
+        if (!$mylittleuser)
         {
             return [
-                'Low1'=>[ 'title'=> 'Новости', 'href' => "/main?login=log6" ],
+                'Low1'=>[ 'title'=> 'Все новости', 'href' => "/main" ],
+                'Low2'=>[ 'title'=> 'Категории', 'href' => "" ],
+                'Low3'=>[ 'title'=> 'Категории', 'href' => "/main" ],
             ];
         }
         else
         {
-            return [
-                'Low1'=>[ 'title'=> "Новости", 'href' => "/main?$user->login" ],
-                'low2'=>[ 'title'=> 'Мои новости', 'href' => '/main/' ],
-            ];
+            if ($mylittleuser->admin_rights==1){
+                return [
+                    'Low1'=>[ 'title'=> 'Все новости', 'href' => "/main" ],
+                    'Low2'=>[ 'title'=> 'Категории', 'href' => "/main" ],
+                ];
+            }
+            else{
+                return [
+                    'Low1'=>[ 'title'=> 'Все новости', 'href' => "/main" ],
+                    'Low2'=>[ 'title'=> 'Категории', 'href' => "/main" ],
+                ];
+            }
+
+
         }
 
     }
+
+    public function actionIndex(){
+      /*  $this->aHeader[] = new Menu((new TopMenu()),'top_menu.php');
+        $this->aLeftMenu[] = new Menu(new Category(),'left_menu.php');
+        var_dump("1");*/
+
+    }
+
+    public function actionCategory(){
+      /*  $this->aHeader[] = new Menu((new TopMenu()),'top_menu.php');
+        $this->aLeftMenu[] = new Menu(Category::findById($this->category),'left_menu.php');
+        var_dump("2");*/
+
+    }
+
+
+
+
+
 }

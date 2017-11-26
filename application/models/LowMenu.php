@@ -8,20 +8,33 @@
 
 class LowMenu implements iMenu
 {
-    function getData($user)
+    function getData($mylittleuser,$verified_admin=null)
     {
-        if (!$user)
+        if (!$mylittleuser)
         {
             return [
-                'Low1'=>[ 'title'=> 'Новости', 'href' => "/main?login=log6" ],
+                'Low1'=>[ 'title'=> 'Новости', 'href' => "/main" ],
             ];
         }
         else
         {
-            return [
-                'Low1'=>[ 'title'=> "Новости", 'href' => "/main?$user->login" ],
-                'low2'=>[ 'title'=> 'Мои новости', 'href' => '/main/' ],
-            ];
+            if ($mylittleuser->admin_rights==1){
+                return [
+                    'Low1'=>[ 'title'=> "Новости", 'href' => "/main?login=$mylittleuser->login" ],
+                    'Low2'=>[ 'title'=> 'Мои новости', 'href' => "/main?login=$mylittleuser->login" ],
+                    'Low3'=>[ 'title'=> 'Неодобренные новости', 'href' => "/main?login=$mylittleuser->login" ],
+                    'Low4'=>[ 'title'=> 'Пользователи', 'href' => "/main?login=$mylittleuser->login" ],
+                    'Low5'=>[ 'title'=> 'Категории', 'href' => "/main?login=$mylittleuser->login" ],
+                ];
+            }
+            else{
+                return [
+                    'Low1'=>[ 'title'=> "Новости", 'href' => "/main?login=$mylittleuser->login" ],
+                    'low2'=>[ 'title'=> 'Мои новости', 'href' => "/main?login=$mylittleuser->login" ],
+                ];
+            }
+
+
         }
     }
 

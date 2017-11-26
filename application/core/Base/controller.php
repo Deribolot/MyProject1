@@ -3,7 +3,7 @@
 abstract class Controller {
 
     protected $action;
-    protected $user;
+    protected $mylittleuser;
 
 	public $aHighMenu = [];
     public $aLowMenu = [];
@@ -28,9 +28,9 @@ abstract class Controller {
 		if (isset($_GET['login']) & !empty($_GET['login'])) {
             $login =   $_GET['login'];
             if (Users::findById($login)){
-                $this->user=Users::findById($login);
-                if(!$this->user->locking) {
-                    if ($this->user->admin_rights) {
+                $this->mylittleuser=Users::findById($login);
+                if(!$this->mylittleuser->locking) {
+                    if ($this->mylittleuser->admin_rights) {
                         var_dump("Админ");
                     } else {
                         var_dump("Пользователь");
@@ -39,14 +39,14 @@ abstract class Controller {
                 else
                 {
                     var_dump("Заблокирован");
-                    $this->user=null;
+                    $this->mylittleuser=null;
                 }
 
             }
             else
             {
                 var_dump("Общий доступ");
-                $this->user=null;
+                $this->mylittleuser=null;
             }
         }
 	}

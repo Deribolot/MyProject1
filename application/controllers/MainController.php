@@ -30,17 +30,23 @@ class MainController extends Controller
     }
 
     public function actionIndex(){
-        $this->aHighMenu[] = new Menu((new HighMenu()),$this->user,'top_menu.php');
-        $this->aLowMenu[] = new Menu((new LowMenu()),$this->user,'top_menu.php');
+        //главная
+        //верхнее меню
+        $this->aHighMenu[] = new Menu((new HighMenu()),$this->mylittleuser,'top_menu.php');
+        //нижнее меню
+        $this->aLowMenu[] = new Menu((new LowMenu()),$this->mylittleuser,'top_menu.php');
+        //левое меню
+        $this->aLeftMenu[] = new CategoriesMenu(new Categories(),null,1,'left_menu.php');
     }
 
     public function actionCategory(){
-        $this->aHighMenu[] = new Menu((new HighMenu()),$this->user,'top_menu.php');
-        $this->aLowMenu[] = new Menu((new LowMenu()),$this->user,'top_menu.php');
+        //новость
+        $this->actionIndex();
     }
+
     public function actionNew(){
-        $this->aHighMenu[] = new Menu((new HighMenu()),$this->user,'top_menu.php');
-        $this->aLowMenu[] = new Menu((new LowMenu()),$this->user,'top_menu.php');
+        //новость
+        $this->actionIndex();
     }
 
 
