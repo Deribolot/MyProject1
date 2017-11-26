@@ -16,7 +16,8 @@ class Route
         //Переменная $_SERVER  --  это массив, содержащий информацию, такую как заголовки, пути и местоположения скриптов.
         //'REQUEST_URI'  --  это URI, который был передан для того, чтобы получить доступ к этой странице. Например, '/index.html'.
         /*explode -- Разбивает строку с помощью разделителя '/'*/
-		$routes = explode('/', $_SERVER['REQUEST_URI']);
+        $answer = explode('?', $_SERVER['REQUEST_URI']);
+        $routes = explode('/', $answer[0]);
 
         /*example.ru/contacts/feedback
         routes[1] --  это контроллер contacts
@@ -26,6 +27,7 @@ class Route
 		unset($routes[0]);
 
 		//ОПРЕДЕЛЕНИЕ КОНТРОЛЛЕРА
+        var_dump("routes $routes[1] & $routes[2]");
 		//isset -- определяет, установлена ли переменная
 		if ( isset($routes[1]) && ($routes[1]) )
 		    //ucfirst --  преобразует первый символ строки в верхний регистр

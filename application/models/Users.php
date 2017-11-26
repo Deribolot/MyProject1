@@ -79,6 +79,7 @@ class Users extends Object
      {
          return $this->setValueForParam('email',$email);
      }
+
      /**
       * @return string
       */
@@ -95,6 +96,7 @@ class Users extends Object
      {
          return $this->setValueForParam('user_password',$user_password);
      }
+
      /**
       * @return string
       */
@@ -111,6 +113,7 @@ class Users extends Object
      {
          return $this->setValueForParam('data_checkin',$data_checkin);
      }
+
      /**
       * @return bool
       */
@@ -127,6 +130,7 @@ class Users extends Object
      {
          return $this->setValueForParam('admin_rights',$admin_rights);
      }
+
      /**
       * @return string
       */
@@ -143,6 +147,7 @@ class Users extends Object
      {
          return $this->setValueForParam('data_assumption',$data_assumption);
      }
+
      /**
       * @return bool
       */
@@ -250,8 +255,8 @@ class Users extends Object
                      $str= "";
                  (($column_name !=0)&&($column_name !=(count(array_keys($params))-1)))? $str= $str.", ":$str= $str;
              }
-             $oQuery = Object::$db->prepare("UPDATE {$table} SET  {$str} WHERE id=:need_id");
-             $oQuery->execute(['need_id' => ($params[id])]);
+             $oQuery = Object::$db->prepare("UPDATE {$table} SET  {$str} WHERE login=:need_login");
+             $oQuery->execute(['need_login' => ($params[login])]);
              return true;
          }catch (PDOException $e) {
              var_dump("Ошибка при обновлении");

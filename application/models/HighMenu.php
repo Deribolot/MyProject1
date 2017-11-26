@@ -8,12 +8,23 @@
 
 class HighMenu implements iMenu
 {
-    function getData()
+    function getData($user)
     {
-        return [
-            'High1'=>[ 'title'=> 'Я-автор', 'href' => '/1' ],
-            'High2'=>[ 'title'=> 'Выход', 'href' => '/1' ],
-        ];
+        if (!$user)
+        {
+            return [
+                'High1'=>[ 'title'=> 'Вход', 'href' => "/main?login=log6" ],
+                'High2'=>[ 'title'=> 'Регистрация', 'href' => '/main/' ],
+            ];
+        }
+        else
+        {
+            return [
+                'High1'=>[ 'title'=> "Я-$user->login", 'href' => "/main?$user->login" ],
+                'High2'=>[ 'title'=> 'Выход', 'href' => '/main/' ],
+            ];
+        }
+
     }
 
 }

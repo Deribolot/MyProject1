@@ -11,5 +11,5 @@ interface iMenu
     /**
      * @return array
      */
-    function getData();
+    function getData($user);
 }

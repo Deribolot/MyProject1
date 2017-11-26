@@ -13,9 +13,9 @@ class Menu extends View
      * @param iMenu $oDataSource
      * @param $template
      */
-    public function __construct($oDataSource,$template)
+    public function __construct($oDataSource,$user,$template)
     {
-        $this->addData('aData', $oDataSource->getData());
+        $this->addData('aData', $oDataSource->getData($user));
         parent::__construct($template);
     }
 

@@ -3,6 +3,7 @@
 abstract class Controller {
 
     protected $action;
+    protected $user;
 
 	public $aHighMenu = [];
     public $aLowMenu = [];
@@ -23,6 +24,31 @@ abstract class Controller {
 	     //main.php -- основной вид сайта
         //создали страницу
 		$this->view = new View($template);
+
+		if (isset($_GET['login']) & !empty($_GET['login'])) {
+            $login =   $_GET['login'];
+            if (Users::findById($login)){
+                $this->user=Users::findById($login);
+                if(!$this->user->locking) {
+                    if ($this->user->admin_rights) {
+                        var_dump("Админ");
+                    } else {
+                        var_dump("Пользователь");
+                    }
+                }
+                else
+                {
+                    var_dump("Заблокирован");
+                    $this->user=null;
+                }
+
+            }
+            else
+            {
+                var_dump("Общий доступ");
+                $this->user=null;
+            }
+        }
 	}
 
 	function build(){

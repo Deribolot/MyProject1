@@ -6,7 +6,7 @@
  * Time: 11:12
  */
 
-class LowMenu implements iMenu
+class LeftMenu implements iMenu
 {
     function getData($user)
     {
@@ -23,6 +23,6 @@ class LowMenu implements iMenu
                 'low2'=>[ 'title'=> 'Мои новости', 'href' => '/main/' ],
             ];
         }
-    }
 
+    }
 }
