@@ -234,7 +234,6 @@ class Users extends Object
              return false;
          }
      }
-
      //сохранение через обновление
      protected static function updateRecord($params = [])
      {

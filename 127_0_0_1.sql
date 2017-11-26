@@ -281,21 +281,21 @@ ALTER TABLE `relationships`
 -- Ограничения внешнего ключа таблицы `comments`
 --
 ALTER TABLE `comments`
-  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`login_autor`) REFERENCES `users` (`login`),
-  ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`id_news`) REFERENCES `news` (`id`);
+  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`login_autor`) REFERENCES `users` (`login`) on delete cascade,
+  ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`id_news`) REFERENCES `news` (`id`) on delete cascade;
 
 --
 -- Ограничения внешнего ключа таблицы `news`
 --
 ALTER TABLE `news`
-  ADD CONSTRAINT `news_ibfk_1` FOREIGN KEY (`login_autor`) REFERENCES `users` (`login`);
+  ADD CONSTRAINT `news_ibfk_1` FOREIGN KEY (`login_autor`) REFERENCES `users` (`login`) on delete cascade;
 
 --
 -- Ограничения внешнего ключа таблицы `relationships`
 --
 ALTER TABLE `relationships`
-  ADD CONSTRAINT `relationships_ibfk_1` FOREIGN KEY (`id_news`) REFERENCES `news` (`id`),
-  ADD CONSTRAINT `relationships_ibfk_2` FOREIGN KEY (`id_category`) REFERENCES `categories` (`id`);
+  ADD CONSTRAINT `relationships_ibfk_1` FOREIGN KEY (`id_news`) REFERENCES `news` (`id`) on delete cascade,
+  ADD CONSTRAINT `relationships_ibfk_2` FOREIGN KEY (`id_category`) REFERENCES `categories` (`id`) on delete cascade;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -10,12 +10,7 @@
  */
 class Messages extends Object
 {
-    //protected $id;
-    //protected $login_autor;
-    //protected $data_create;
-    //protected $text;
-    //protected $verified_admin;
-    //protected $rating;
+
 
     static  function TableName()
     {
