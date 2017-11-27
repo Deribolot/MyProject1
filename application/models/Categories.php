@@ -57,29 +57,39 @@ class Categories extends Object implements iMenu
      */
     function getData($mylittleuser,$verified_admin)
     {
-        if ($mylittleuser)
-            //Это МОИ НОВОСТИ
-            //вывести категории, в которых пользователь $mylittleuser писал новости
-            return null;
-        else {
-            if ($verified_admin === 1 or $verified_admin === 0) {
-                //Это общие новости
-                //Вывести одобренные категории, у которых существуют одобренные/неодобренные новости
-                $aCat = Categories::findList($verified_admin);
-            } else {
-                var_dump("Ошибка при определении типа новости");
-                return null;
+        var_dump("СЕЙЧАС категория $this->id");
+        $aData = ['title' => $this->name? :'Категории'];
+        $aData['items'] = [];
+        if ($verified_admin === 1 or $verified_admin === 0) {
+            //Это общие новости
+            //Вывести одобренные категории, у которых существуют одобренные/неодобренные новости
+            $aCat = Categories::findList($verified_admin);
+            if (Users::findById($mylittleuser->login)->login) {
+                //авторизованный
+                foreach ($aCat as $oCategories) {
+                    if ($verified_admin === 1) {
+                        $aData['items'][] = ['title' => $oCategories->name, 'href' => '/main/' . $oCategories->id . '?login=' . $mylittleuser->login];
+                    } else {
+                        $aData['items'][] = ['title' => $oCategories->name, 'href' => '/bad/' . $oCategories->id . '?login=' . $mylittleuser->login];
+                    }
+                }
+            }
+            else{
+                //неавторизованный
+                foreach ($aCat as $oCategories) {
+                    if ($verified_admin === 1) {
+                        $aData['items'][] = ['title' => $oCategories->name, 'href' => '/main/' . $oCategories->id ];
+                    }else {
+                        $aData['items'][] = ['title' => $oCategories->name, 'href' => '/bad/' . $oCategories->id ];
+                    }
+                }
             }
         }
-        $aData = ['title' => $this->name? :'Категории'];
+        else{
+            //Это МОИ НОВОСТИ
+            //вывести категории, в которых пользователь $mylittleuser писал новости
+            $aData=[];
 
-        $aData['items'] = [];
-        foreach ($aCat as $oCategories)
-            $aData['items'][] = ['title'=>$oCategories->name, 'href' => '/catalog/'.$oCategories->id];
-
-        if ($aData['items']){
-            $aData['items'][0]['class'] = 'first';
-            $aData['items'][count($aData['items'])-1]['class'] = 'last';
         }
 
         return $aData;
@@ -92,7 +102,7 @@ class Categories extends Object implements iMenu
      */
     static function findList($verified_admin,$mylittleuser=null){
 
-        if (!$mylittleuser ) {
+        if ($verified_admin === 1 or $verified_admin === 0) {
             //Вывести одобренные категории, у которых существуют одобренные/неодобренные новости
             $oQuery = self::$db->prepare("SELECT * FROM " . self::TableName() . " WHERE verified_admin=:need_verified_admin");
             $oQuery->execute(['need_verified_admin' => $verified_admin]);
@@ -103,7 +113,7 @@ class Categories extends Object implements iMenu
 
         }
         else{
-            //Вывести категории, в которых писал $mylittleuser
+            //Вывести категории, в которых писал $mylittleuser для моих новостей
             $aRes = [];
 
         }

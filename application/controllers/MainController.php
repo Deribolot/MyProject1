@@ -29,24 +29,32 @@ class MainController extends Controller
 
     }
 
-    public function actionIndex(){
-        //главная
+    public function actionMenu(){
         //верхнее меню
         $this->aHighMenu[] = new Menu((new HighMenu()),$this->mylittleuser,'top_menu.php');
         //нижнее меню
         $this->aLowMenu[] = new Menu((new LowMenu()),$this->mylittleuser,'top_menu.php');
+    }
+
+    public function actionIndex(){
+        //главная
+        $this->actionMenu();
         //левое меню
-        $this->aLeftMenu[] = new CategoriesMenu(new Categories(),null,1,'left_menu.php');
+        $this->aLeftMenu[] = new CategoriesMenu(new Categories(),$this->mylittleuser,1,'left_menu.php');
+        //вывод всех проверенных новостей
     }
 
     public function actionCategory(){
-        //новость
-        $this->actionIndex();
+        //категория
+        $this->actionMenu();
+        //левое меню
+        $this->aLeftMenu[] = new CategoriesMenu(Categories::findById($this->category),$this->mylittleuser,1,'left_menu.php');
+        //вывод всех проверенных новостей этой категории
     }
 
     public function actionNew(){
         //новость
-        $this->actionIndex();
+        $this->actionMenu();
     }
 
 
