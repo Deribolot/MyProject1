@@ -3,8 +3,9 @@ require('application/core/Base/Object.php');
 require('application/core/Base/Messages.php');
 require('application/core/Base/controller.php');
 require('application/core/Base/view.php');
-require('application/core/Elements/Menu.php');
+
 require('application/core/Interfaces/IMenu.php');
+require('application/core/Interfaces/IContentNews.php');
 require('application/models/Users.php');
 require('application/models/News.php');
 require('application/models/Comments.php');

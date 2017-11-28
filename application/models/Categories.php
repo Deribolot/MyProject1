@@ -57,10 +57,13 @@ class Categories extends Object implements iMenu
      */
     function getData($mylittleuser,$verified_admin)
     {
-        var_dump("СЕЙЧАС категория $this->id");
-        $aData = ['title' => $this->name? :'Категории'];
+        //$mylittleuser - объкт Users, авторизованный пользователь
+        //$verified_admin - состояние проверки новости, 0 - не проверена, 1 - проверена
+
+        $aData = ['title' => 'Категории'];
         $aData['items'] = [];
         if ($verified_admin === 1 or $verified_admin === 0) {
+            var_dump("СЕЙЧАС категория rtgthexthexthtt");
             //Это общие новости
             //Вывести одобренные категории, у которых существуют одобренные/неодобренные новости
             $aCat = Categories::findList($verified_admin);
@@ -88,8 +91,8 @@ class Categories extends Object implements iMenu
         else{
             //Это МОИ НОВОСТИ
             //вывести категории, в которых пользователь $mylittleuser писал новости
-            $aData=[];
-
+            $aData['items'][] = ['title' => 'sdjhfeshfsjfjs' ];
+            var_dump("СЕЙЧАС категория $this->id");
         }
 
         return $aData;
@@ -104,7 +107,10 @@ class Categories extends Object implements iMenu
 
         if ($verified_admin === 1 or $verified_admin === 0) {
             //Вывести одобренные категории, у которых существуют одобренные/неодобренные новости
-            $oQuery = self::$db->prepare("SELECT * FROM " . self::TableName() . " WHERE verified_admin=:need_verified_admin");
+            $oQuery = self::$db->prepare("SELECT DISTINCT  categories.* FROM  categories
+            INNER JOIN relationships on  categories.id = id_category 
+            INNER JOIN news on news.id = id_news
+            WHERE news.verified_admin=:need_verified_admin AND  categories.verified_admin=1 ");
             $oQuery->execute(['need_verified_admin' => $verified_admin]);
             $oQuery->execute();
             $aRes = [];

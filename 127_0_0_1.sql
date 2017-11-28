@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Ноя 22 2017 г., 01:45
+-- Время создания: Ноя 28 2017 г., 00:21
 -- Версия сервера: 5.5.48
 -- Версия PHP: 5.5.33
 
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- База данных: `news`
 --
-CREATE DATABASE IF NOT EXISTS `news` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `news`;
 
 -- --------------------------------------------------------
 
@@ -32,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
   `id` int(11) NOT NULL,
   `name` varchar(15) NOT NULL,
   `verified_admin` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `categories`
@@ -42,7 +40,8 @@ INSERT INTO `categories` (`id`, `name`, `verified_admin`) VALUES
 (1, 'category1', 0),
 (2, 'category2', 0),
 (3, 'category3', 1),
-(5, 'category5', 1);
+(4, 'category4', 1),
+(6, 'category5', 1);
 
 -- --------------------------------------------------------
 
@@ -104,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `news` (
   `text` varchar(500) NOT NULL,
   `verified_admin` tinyint(1) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `news`
@@ -121,7 +120,9 @@ INSERT INTO `news` (`id`, `name`, `login_autor`, `data_create`, `text`, `verifie
 (45, 'Уникальная 66', 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
 (53, 'Катюша6666', 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
 (54, 'Катюша9999', 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
-(55, 'Катюша888887', 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0);
+(55, 'Катюша888887', 'log6', '2017-10-31 22:55:36', 'Cat is walking,', 1, 0),
+(56, 'Новость1', 'log6', '0000-00-00 00:00:00', 'Привет', 0, 0),
+(61, 'Новость2', 'log2', '2017-11-27 00:00:00', 'ыпвпвпвапяпяавпа', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -133,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `relationships` (
   `id` int(11) NOT NULL,
   `id_news` int(11) NOT NULL,
   `id_category` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `relationships`
@@ -143,41 +144,12 @@ INSERT INTO `relationships` (`id`, `id_news`, `id_category`) VALUES
 (1, 4, 1),
 (2, 5, 2),
 (3, 6, 3),
-(4, 45, 5),
-(5, 45, 5),
-(6, 45, 5),
-(7, 45, 5),
-(8, 45, 5),
-(9, 45, 5),
-(10, 45, 5),
-(11, 45, 5),
-(12, 45, 5),
-(13, 45, 5),
-(14, 45, 5),
-(15, 45, 5),
-(16, 45, 5),
-(17, 45, 5),
-(18, 45, 5),
-(19, 45, 5),
-(20, 45, 5),
-(21, 45, 5),
-(22, 45, 5),
-(23, 45, 5),
-(24, 45, 5),
-(25, 45, 5),
-(26, 45, 5),
-(27, 45, 5),
-(28, 55, 5),
-(29, 55, 5),
-(30, 55, 5),
-(31, 55, 5),
-(32, 55, 5),
-(33, 55, 5),
-(34, 55, 5),
-(35, 55, 5),
-(36, 55, 5),
 (37, 55, 3),
-(38, 55, 1);
+(38, 55, 1),
+(39, 7, 4),
+(40, 39, 4),
+(43, 61, 6),
+(44, 61, 4);
 
 -- --------------------------------------------------------
 
@@ -257,7 +229,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT для таблицы `comments`
 --
@@ -267,12 +239,12 @@ ALTER TABLE `comments`
 -- AUTO_INCREMENT для таблицы `news`
 --
 ALTER TABLE `news`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=56;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=62;
 --
 -- AUTO_INCREMENT для таблицы `relationships`
 --
 ALTER TABLE `relationships`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=45;
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
@@ -281,21 +253,21 @@ ALTER TABLE `relationships`
 -- Ограничения внешнего ключа таблицы `comments`
 --
 ALTER TABLE `comments`
-  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`login_autor`) REFERENCES `users` (`login`) on delete cascade,
-  ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`id_news`) REFERENCES `news` (`id`) on delete cascade;
+  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`login_autor`) REFERENCES `users` (`login`) ON DELETE CASCADE,
+  ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`id_news`) REFERENCES `news` (`id`) ON DELETE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `news`
 --
 ALTER TABLE `news`
-  ADD CONSTRAINT `news_ibfk_1` FOREIGN KEY (`login_autor`) REFERENCES `users` (`login`) on delete cascade;
+  ADD CONSTRAINT `news_ibfk_1` FOREIGN KEY (`login_autor`) REFERENCES `users` (`login`) ON DELETE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `relationships`
 --
 ALTER TABLE `relationships`
-  ADD CONSTRAINT `relationships_ibfk_1` FOREIGN KEY (`id_news`) REFERENCES `news` (`id`) on delete cascade,
-  ADD CONSTRAINT `relationships_ibfk_2` FOREIGN KEY (`id_category`) REFERENCES `categories` (`id`) on delete cascade;
+  ADD CONSTRAINT `relationships_ibfk_1` FOREIGN KEY (`id_news`) REFERENCES `news` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `relationships_ibfk_2` FOREIGN KEY (`id_category`) REFERENCES `categories` (`id`) ON DELETE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
