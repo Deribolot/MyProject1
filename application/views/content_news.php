@@ -4,9 +4,16 @@
  * @var $aData
  */
 ?>
-<h3><?= $aData['title'] ?></h3>
-<ul class="list">
-    <? foreach ($aData['items'] as $item): ?>
-        <li <? if(isset($item['class'])): ?>class="<?= $item['class'] ?>"<? endif ?> ><a href="<?= $item['href'] ?>"><?= $item['title'] ?></a></li>
+<div >
+    <h1> <? $aData['name']  ?></h1>
+    <h2><? $aData['text']  ?></h2>
+    <? foreach ($aData['sheet'] as $item): ?>
+        <div><?= $item ?></div>
     <? endforeach; ?>
-</ul>
+    <a href="<?=$aData["back"]?>">назад</a>
+</div>
+
+
+
+
+

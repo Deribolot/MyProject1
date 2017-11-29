@@ -76,7 +76,7 @@ class MainController extends Controller
         //левое меню
         $this->aLeftMenu[] = new CategoriesMenu(new Categories(),$this->mylittleuser,1,'left_menu.php');
         //вывод новости, категории нет
-        $this->aContent[] = new ContentNews(News::findById($this->new),$this->mylittleuser,1,null,'left_menu.php');
+        $this->aContent[] = new ContentNews(News::findById($this->new),$this->mylittleuser,1,null,'content_news.php');
     }
 
     public function actionCategoryNew(){
@@ -85,7 +85,7 @@ class MainController extends Controller
         //левое меню
         $this->aLeftMenu[] = new CategoriesMenu(Categories::findById($this->category),$this->mylittleuser,1,'left_menu.php');
         //вывод новости, категории есть
-        $this->aContent[] = new ContentNews(News::findById($this->new),$this->mylittleuser,1, $this->category,'left_menu.php');
+        $this->aContent[] = new ContentNews(News::findById($this->new),$this->mylittleuser,1, $this->category,'content_news.php');
 
     }
 

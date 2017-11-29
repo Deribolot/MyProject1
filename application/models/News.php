@@ -52,75 +52,28 @@ class News extends Messages implements iContentNews
         //$mylittleuser - объкт Users, авторизованный пользователь
         //$verified_admin - состояние проверки новости, 0 - не проверена, 1 - проверена
         //$id_category - категория новости
-        $aData = ['title' => $this->name? :""];
+        $aData = ['title' => ""];
         if ($this->id) {//верни новость и нормальную ссылку ?НАЗАД
             if (News::findById($this->id)){
-                $aData = ['title' => News::findById($id_category)->name];
-                $aCat = $this;
-                foreach ($aCat as $oCategories) {
-                    if ($verified_admin === 1) {
-                        $aData['items'][] = ['title' => $oCategories];
-                    } else {
-                        $aData['items'][] = ['title' => $oCategories];
-                    }
+                //$aCat = $this;
+                //$class = get_called_class();
+                /*$columnNames=$class::getColumnName();
+                foreach ($columnNames as $column_name => $column_value) {
+                    $aData["items"][] =  $column_value.': '.$aCat->$column_value ."</br>";
+                }*/
+                $aResult=$this->getResume($verified_admin,$mylittleuser);
+                $aData["text"]=$aResult["text"];
+                $aData["name"]=$aResult["name"];
+                foreach ($aResult["sheet"] as $column_name => $column_value)
+                {
+                    $aData["sheet"][]=$column_value;
+                    var_dump("$column_value");
                 }
-                /*if ($verified_admin === 1 or $verified_admin === 0) {
-                    //Это общие новости
-                    if (Users::findById($mylittleuser->login)->login) {
-                        //авторизованный
-                        if (Categories::findById($id_category)->id) {
-                            //c категорией
-                            $aCat = News::findList($verified_admin,$id_category);
-                            foreach ($aCat as $oCategories) {
-                                if ($verified_admin === 1) {
-                                    $aData['items'][] = ['title' => $oCategories->name, 'href' => '/main/' . $id_category . '?login=' . $mylittleuser->login . '&new=' . $oCategories->id];
-                                } else {
-                                    $aData['items'][] = ['title' => $oCategories->name, 'href' => '/bad/' . $id_category . '?login=' . $mylittleuser->login . '&new=' . $oCategories->id];
-                                }
-                            }
-                        } else {
-                            $aCat = News::findList($verified_admin);
-                            //без категории
-                            foreach ($aCat as $oCategories) {
-                                if ($verified_admin === 1) {
-                                    $aData['items'][] = ['title' => $oCategories->name, 'href' => '/main?login=' . $mylittleuser->login. '&new=' . $oCategories->id];
-                                } else {
-                                    $aData['items'][] = ['title' => $oCategories->name, 'href' => '/bad?login=' . $mylittleuser->login. '&new=' . $oCategories->id];
-                                }
-                            }
-                        }
-                    }
-                    else{
-                        //неавторизованный
-                        if (Categories::findById($id_category)->id) {
-                            $aData = ['title' => Categories::findById($id_category)->name];
-                            $aCat = News::findList($verified_admin,$id_category);
-                            //c категорией
-                            foreach ($aCat as $oCategories) {
-                                if ($verified_admin === 1) {
-                                    $aData['items'][] = ['title' => $oCategories->name, 'href' => '/main/' . $id_category . '?new=' . $oCategories->id];
-                                } else {
-                                    $aData['items'][] = ['title' => $oCategories->name, 'href' => '/bad/' . $id_category . '?new=' . $oCategories->id];
-                                }
-                            }
-                        } else {
-                            $aCat = News::findList($verified_admin);
-                            //без категории
-                            foreach ($aCat as $oCategories) {
-                                if ($verified_admin === 1) {
-                                    $aData['items'][] = ['title' => $oCategories->name, 'href' => '/main?new=' . $oCategories->id];
-                                } else {
-                                    $aData['items'][] = ['title' => $oCategories->name, 'href' => '/bad?new=' . $oCategories->id];
-                                }
-                            }
-                        }
-                    }
-                }
-                else{
-                    //Это МОИ НОВОСТИ
-                    //вывести новости, в которых пользователь $mylittleuser писал новости, по соответ категории
-                    $aData['items'][] = ['title' => 'sdjhfeshfsjfjs' ];
-                    var_dump("СЕЙЧАС категория $this->id");
+                $answer = explode('new', $_SERVER['REQUEST_URI']);
+                $aData["back"] =  $answer[0];
+                /*foreach ($aData["items"] as $column_name => $column_value)
+                {
+                    var_dump("$column_value");
                 }*/
             }
             else
@@ -241,6 +194,76 @@ WHERE categories.verified_admin=1 AND news.verified_admin=:need_verified_admin A
 
         }
         return $aRes;
+    }
+
+    //какие данные вывести
+    function getResume($verified_admin,$mylittleuser=null)
+    {
+        $stringNames = [];
+        $stringNames["name"] = $this->name . "</br>";
+        $stringNames["text"] = $this->text . "</br>";
+        $mydate = explode(' ', $this->data_create);
+        $stringNames["sheet"][] = "новость оставлена " . $mydate[0] . " в " . $mydate[1] . "</br>";
+        $oQuery = self::$db->prepare("SELECT DISTINCT categories.* FROM news
+        INNER JOIN relationships ON id_news=:need_id_news
+        INNER JOIN categories ON id_category= categories.id
+        WHERE categories.verified_admin=1");
+        $oQuery->execute(['need_id_news' => $this->id]);
+        $oQuery->execute();
+        $aRes = "";
+        foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues)
+            $aRes .= ((new Categories($aValues))->name) . ", ";
+        $aRes=substr ( $aRes, 0 , strlen ( $aRes)-2);
+        $stringNames["sheet"][] = "в категории(иях) ".$aRes."</br>";
+        if ($mylittleuser===null){
+            //не авторизован
+            if ($verified_admin===1){
+                //новости общие
+                $stringNames["sheet"][] = "пользователем ".$this->login_autor."</br>";
+            }
+            else{
+                var_dump("У Вас нет таких прав, и я Вам ничего не должен!");
+            }
+        }
+        else{
+
+            if (($mylittleuser->admin_rights)===1){
+                //админ
+                $stringNames["sheet"][] = "с id ".$this->id."</br>";
+                if ($verified_admin===1){
+                    //новости общие
+                    $stringNames["sheet"][] = "пользователем ".$this->login_autor."</br>";
+                }
+                else{
+                    if ($verified_admin===0){
+                        //новости неодобренные
+                        $stringNames["sheet"][] = "пользователем ".$this->login_autor."</br>";
+                    }
+                    else{
+                        //мои новости
+                        $stringNames["sheet"][] = "статус новости ".(($this->verified_admin===0)?"не проверена":"проверена")."</br>";
+                    }
+                }
+            }
+            else{
+                //пользователь
+                if ($verified_admin===1){
+                    //новости общие
+                    $stringNames["sheet"][] = "пользователем ".$this->login_autor."</br>";
+                }
+                else{
+                    if ($verified_admin===0){
+                        //новости неодобренные
+                        var_dump("У Вас нет таких прав, и я Вам ничего не должен!");
+                    }
+                    else{
+                        //мои новости
+                        $stringNames["sheet"][] = "статус новости ".(($this->verified_admin===0)?"не проверена":"проверена")."</br>";
+                    }
+                }
+            }
+        }
+        return $stringNames;
     }
 
 }
