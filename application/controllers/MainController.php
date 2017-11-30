@@ -3,8 +3,9 @@
 
 class MainController extends Controller
 {
-    private $category;
-    private $new;
+    protected $category;
+    protected $new;
+    protected $verified_admin=1;
 
     function parseParams($params)
     {
@@ -55,18 +56,18 @@ class MainController extends Controller
         //главная
         $this->actionMenu();
         //левое меню
-        $this->aLeftMenu[] = new CategoriesMenu(new Categories(),$this->mylittleuser,1,'left_menu.php');
+        $this->aLeftMenu[] = new CategoriesMenu(new Categories(),$this->mylittleuser,$this->verified_admin,'left_menu.php');
         //вывод всех проверенных новостей
-        $this->aContent[] = new ContentNews(new News(),$this->mylittleuser,1, null,'left_menu.php');
+        $this->aContent[] = new ContentNews(new News(),$this->mylittleuser,$this->verified_admin, null,'new_menu.php');
     }
 
     public function actionCategory(){
         //категория
         $this->actionMenu();
         //левое меню
-        $this->aLeftMenu[] = new CategoriesMenu(Categories::findById($this->category),$this->mylittleuser,1,'left_menu.php');
+        $this->aLeftMenu[] = new CategoriesMenu(Categories::findById($this->category),$this->mylittleuser,$this->verified_admin,'left_menu.php');
         //вывод всех проверенных новостей этой категории
-        $this->aContent[] = new ContentNews(new News(),$this->mylittleuser,1, $this->category,'left_menu.php');
+        $this->aContent[] = new ContentNews(new News(),$this->mylittleuser,$this->verified_admin, $this->category,'new_menu.php');
 
     }
 
@@ -74,20 +75,21 @@ class MainController extends Controller
         //новость
         $this->actionMenu();
         //левое меню
-        $this->aLeftMenu[] = new CategoriesMenu(new Categories(),$this->mylittleuser,1,'left_menu.php');
+        $this->aLeftMenu[] = new CategoriesMenu(new Categories(),$this->mylittleuser,$this->verified_admin,'left_menu.php');
         //вывод новости, категории нет
-        $this->aContent[] = new ContentNews(News::findById($this->new),$this->mylittleuser,1,null,'content_news.php');
+        $this->aContent[] = new ContentNews(News::findById($this->new),$this->mylittleuser,$this->verified_admin,null,'content_news.php');
     }
 
     public function actionCategoryNew(){
         //категория
         $this->actionMenu();
         //левое меню
-        $this->aLeftMenu[] = new CategoriesMenu(Categories::findById($this->category),$this->mylittleuser,1,'left_menu.php');
+        $this->aLeftMenu[] = new CategoriesMenu(Categories::findById($this->category),$this->mylittleuser,$this->verified_admin,'left_menu.php');
         //вывод новости, категории есть
-        $this->aContent[] = new ContentNews(News::findById($this->new),$this->mylittleuser,1, $this->category,'content_news.php');
+        $this->aContent[] = new ContentNews(News::findById($this->new),$this->mylittleuser,$this->verified_admin, $this->category,'content_news.php');
 
     }
 
 
 }
+?>

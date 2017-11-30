@@ -69,3 +69,4 @@ abstract class Controller {
 	    $this->view->generate();
     }
 }
+?>

@@ -91,8 +91,23 @@ class Categories extends Object implements iMenu
         else{
             //Это МОИ НОВОСТИ
             //вывести категории, в которых пользователь $mylittleuser писал новости
-            $aData['items'][] = ['title' => 'sdjhfeshfsjfjs' ];
-            var_dump("СЕЙЧАС категория $this->id");
+            //$aData['items'][] = ['title' => 'sdjhfeshfsjfjs' ];
+            //var_dump("СЕЙЧАС категория $this->id");
+            if (Users::findById($mylittleuser->login)->login) {
+                $aCat = Categories::findList(null,$mylittleuser);
+                //авторизованный
+                foreach ($aCat as $oCategories) {
+                    if ($verified_admin === 1) {
+                        $aData['items'][] = ['title' => $oCategories->name, 'href' => '/main/' . $oCategories->id . '?login=' . $mylittleuser->login];
+                    } else {
+                        $aData['items'][] = ['title' => $oCategories->name, 'href' => '/bad/' . $oCategories->id . '?login=' . $mylittleuser->login];
+                    }
+                }
+            }
+            else{
+                //неавторизованный
+                var_dump("Нет Ваших новостей");
+            }
         }
 
         return $aData;

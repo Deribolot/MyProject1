@@ -75,9 +75,9 @@ img.aligntop {
 p {
 	margin-bottom: 1.5em;
 }
-
 ul {
 	margin-bottom: 1.5em;
+
 }
 
 ul h4 {
@@ -89,9 +89,19 @@ a {
 }
 
 #content {
-	padding: 0 0 0 10px;
-	width: 615px;
-	margin: 0 0 0 285px;
+	padding: 0 0 0 0px;
+	width: 70%;
+	margin: 0 0 0 0;
+	float: right;
+}
+#content ul{
+	padding: 10px 0 10px 0px;
+	float: left;
+	margin-bottom: 1%;
+}
+#content li{
+ width: 100%;
+	float: left;
 }
 
 #footer {
@@ -167,17 +177,33 @@ a {
 	margin: 0;
 	position: relative;
 	width: 900px;
-	padding: 20px 40px 0 40px;
+	padding: 10px 40px 0 40px;
 }
-
+#leftMenu{
+	padding: 0px ;
+	width: 20%;
+	margin: 0 6% 0 4%;
+}
+#leftMenu ul{
+	padding: 10px 0 10px 0px;
+	float: left;
+	margin-bottom: 1%;
+}
+#leftMenu li{
+	width: 100%;
+	float: left;
+}
 #page .section-list {
-	padding-left: 0;
+	padding-left: 10px;
 	list-style: none;
+	padding: 0;
+
 }
 
 #page .section-list li {
 	padding: 25px 0 25px 0;
 	clear: both;
+	border-top: solid 1px #e3e3e3;
 }
 
 #sidebar ul {

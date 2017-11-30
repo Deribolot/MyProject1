@@ -3,7 +3,7 @@ require('application/core/Base/Object.php');
 require('application/core/Base/Messages.php');
 require('application/core/Base/controller.php');
 require('application/core/Base/view.php');
-
+require('application/controllers/MainController.php');
 require('application/core/Interfaces/IMenu.php');
 require('application/core/Interfaces/IContentNews.php');
 require('application/models/Users.php');

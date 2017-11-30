@@ -22,7 +22,7 @@ class LowMenu implements iMenu
                 return [
                     'Low1'=>[ 'title'=> "Новости", 'href' => "/main?login=$mylittleuser->login" ],
                     'Low2'=>[ 'title'=> 'Мои новости', 'href' => "/main?login=$mylittleuser->login" ],
-                    'Low3'=>[ 'title'=> 'Неодобренные новости', 'href' => "/main?login=$mylittleuser->login" ],
+                    'Low3'=>[ 'title'=> 'Неодобренные новости', 'href' => "/bad?login=$mylittleuser->login" ],
                     'Low4'=>[ 'title'=> 'Пользователи', 'href' => "/main?login=$mylittleuser->login" ],
                     'Low5'=>[ 'title'=> 'Категории', 'href' => "/main?login=$mylittleuser->login" ],
                 ];

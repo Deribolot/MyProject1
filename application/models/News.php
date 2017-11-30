@@ -62,12 +62,15 @@ class News extends Messages implements iContentNews
                     $aData["items"][] =  $column_value.': '.$aCat->$column_value ."</br>";
                 }*/
                 $aResult=$this->getResume($verified_admin,$mylittleuser);
-                $aData["text"]=$aResult["text"];
-                $aData["name"]=$aResult["name"];
+                //$aResult["text"]
+                $aData=['mytext'=>$aResult["text"] ];
+                var_dump($aData["mytext"] );
+                $aData["myname"]=$aResult["name"];
+                var_dump($aData["myname"] );
                 foreach ($aResult["sheet"] as $column_name => $column_value)
                 {
                     $aData["sheet"][]=$column_value;
-                    var_dump("$column_value");
+                    //var_dump("$column_value");
                 }
                 $answer = explode('new', $_SERVER['REQUEST_URI']);
                 $aData["back"] =  $answer[0];
@@ -166,7 +169,7 @@ class News extends Messages implements iContentNews
             if ($id_category===null)
             {
                 //Вывести одобренные/неодобренные все новости
-                $oQuery = self::$db->prepare("SELECT news.* FROM news
+                $oQuery = self::$db->prepare("SELECT DISTINCT news.* FROM news
 INNER JOIN relationships ON id_news= news.id
 INNER JOIN categories ON id_category= categories.id
 WHERE categories.verified_admin=1 AND news.verified_admin=:need_verified_admin");
@@ -201,6 +204,7 @@ WHERE categories.verified_admin=1 AND news.verified_admin=:need_verified_admin A
     {
         $stringNames = [];
         $stringNames["name"] = $this->name . "</br>";
+
         $stringNames["text"] = $this->text . "</br>";
         $mydate = explode(' ', $this->data_create);
         $stringNames["sheet"][] = "новость оставлена " . $mydate[0] . " в " . $mydate[1] . "</br>";
@@ -215,7 +219,7 @@ WHERE categories.verified_admin=1 AND news.verified_admin=:need_verified_admin A
             $aRes .= ((new Categories($aValues))->name) . ", ";
         $aRes=substr ( $aRes, 0 , strlen ( $aRes)-2);
         $stringNames["sheet"][] = "в категории(иях) ".$aRes."</br>";
-        if ($mylittleuser===null){
+        if ($mylittleuser==null){
             //не авторизован
             if ($verified_admin===1){
                 //новости общие
@@ -226,8 +230,8 @@ WHERE categories.verified_admin=1 AND news.verified_admin=:need_verified_admin A
             }
         }
         else{
-
-            if (($mylittleuser->admin_rights)===1){
+            //var_dump("права $mylittleuser->admin_rights");
+            if (($mylittleuser->admin_rights)==1){
                 //админ
                 $stringNames["sheet"][] = "с id ".$this->id."</br>";
                 if ($verified_admin===1){

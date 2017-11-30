@@ -4,7 +4,7 @@
  * @var $aData
  */
 ?>
-<div id="leftMenu">
+<div class="content">
 
 <ul class="list">
     <h3><?= $aData['title'] ?></h3>
