@@ -13,7 +13,7 @@ class HighMenu implements iMenu
         if (!$mylittleuser)
         {
             return [
-                'High1'=>[ 'title'=> 'Вход', 'href' => "/main?login=log6" ],
+                'High1'=>[ 'title'=> 'Вход', 'href' => "/main?login=log1" ],
                 'High2'=>[ 'title'=> 'Регистрация', 'href' => '/main' ],
             ];
         }

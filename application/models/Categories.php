@@ -59,49 +59,36 @@ class Categories extends Object implements iMenu
     {
         //$mylittleuser - объкт Users, авторизованный пользователь
         //$verified_admin - состояние проверки новости, 0 - не проверена, 1 - проверена
-
+        var_dump("verified_admin $verified_admin");
         $aData = ['title' => 'Категории'];
         $aData['items'] = [];
         if ($verified_admin === 1 or $verified_admin === 0) {
-            var_dump("СЕЙЧАС категория rtgthexthexthtt");
+            ($verified_admin === 1)? $word="main":$word="bad";
             //Это общие новости
             //Вывести одобренные категории, у которых существуют одобренные/неодобренные новости
             $aCat = Categories::findList($verified_admin);
             if (Users::findById($mylittleuser->login)->login) {
                 //авторизованный
                 foreach ($aCat as $oCategories) {
-                    if ($verified_admin === 1) {
-                        $aData['items'][] = ['title' => $oCategories->name, 'href' => '/main/' . $oCategories->id . '?login=' . $mylittleuser->login];
-                    } else {
-                        $aData['items'][] = ['title' => $oCategories->name, 'href' => '/bad/' . $oCategories->id . '?login=' . $mylittleuser->login];
-                    }
+                    $aData['items'][] = ['title' => $oCategories->name, 'href' => '/'.$word.'/' . $oCategories->id . '?login=' . $mylittleuser->login];
                 }
             }
             else{
                 //неавторизованный
                 foreach ($aCat as $oCategories) {
-                    if ($verified_admin === 1) {
-                        $aData['items'][] = ['title' => $oCategories->name, 'href' => '/main/' . $oCategories->id ];
-                    }else {
-                        $aData['items'][] = ['title' => $oCategories->name, 'href' => '/bad/' . $oCategories->id ];
-                    }
+                    $aData['items'][] = ['title' => $oCategories->name, 'href' => '/'.$word.'/' . $oCategories->id ];
                 }
             }
         }
         else{
             //Это МОИ НОВОСТИ
             //вывести категории, в которых пользователь $mylittleuser писал новости
-            //$aData['items'][] = ['title' => 'sdjhfeshfsjfjs' ];
-            //var_dump("СЕЙЧАС категория $this->id");
+
             if (Users::findById($mylittleuser->login)->login) {
-                $aCat = Categories::findList(null,$mylittleuser);
+                $aCat = Categories::findList($verified_admin,$mylittleuser);
                 //авторизованный
                 foreach ($aCat as $oCategories) {
-                    if ($verified_admin === 1) {
-                        $aData['items'][] = ['title' => $oCategories->name, 'href' => '/main/' . $oCategories->id . '?login=' . $mylittleuser->login];
-                    } else {
-                        $aData['items'][] = ['title' => $oCategories->name, 'href' => '/bad/' . $oCategories->id . '?login=' . $mylittleuser->login];
-                    }
+                    $aData['items'][] = ['title' => $oCategories->name, 'href' => '/my/' . $oCategories->id . '?login=' . $mylittleuser->login];
                 }
             }
             else{
@@ -109,7 +96,7 @@ class Categories extends Object implements iMenu
                 var_dump("Нет Ваших новостей");
             }
         }
-
+        if ($aCat==[])  {$aData = ['title' => 'Нет подходящих категорий'];$aData['items'] = [];}
         return $aData;
     }
     // создает список категорий
@@ -119,7 +106,7 @@ class Categories extends Object implements iMenu
      * @return array
      */
     static function findList($verified_admin,$mylittleuser=null){
-
+        $aRes = [];
         if ($verified_admin === 1 or $verified_admin === 0) {
             //Вывести одобренные категории, у которых существуют одобренные/неодобренные новости
             $oQuery = self::$db->prepare("SELECT DISTINCT  categories.* FROM  categories
@@ -128,15 +115,22 @@ class Categories extends Object implements iMenu
             WHERE news.verified_admin=:need_verified_admin AND  categories.verified_admin=1 ");
             $oQuery->execute(['need_verified_admin' => $verified_admin]);
             $oQuery->execute();
-            $aRes = [];
             foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues)
                 $aRes[] = new Categories($aValues);
-
         }
         else{
+            var_dump("МОИ КАТЕГОРИИ");
             //Вывести категории, в которых писал $mylittleuser для моих новостей
-            $aRes = [];
-
+            if (Users::findById($mylittleuser->login)->login) {
+                $oQuery = self::$db->prepare("SELECT DISTINCT  categories.* FROM  categories
+                INNER JOIN relationships on  categories.id = id_category 
+                INNER JOIN news on news.id = id_news
+                WHERE news.login_autor=:need_login AND  categories.verified_admin=1 ");
+                $oQuery->execute(['need_login' => Users::findById($mylittleuser->login)->login]);
+                $oQuery->execute();
+                foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues)
+                    $aRes[] = new Categories($aValues);
+            }
         }
         return $aRes;
     }
