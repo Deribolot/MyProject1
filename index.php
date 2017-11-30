@@ -16,8 +16,6 @@ require('application/models/LowMenu.php');
 require('application/DBConnect.php');
 header("Content-Type: text/html; charset=utf-8");
 
-
-
 ini_set('display_errors', 1);
 //создание класса bootstrap и запуск его метода load
 require_once 'application/bootstrap.php';

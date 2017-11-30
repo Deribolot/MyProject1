@@ -242,5 +242,28 @@ abstract class Object
         }
     }
 
+    /**
+     * @return array
+     */
+    public function getAParams()
+    {
+        return $this->aParams;
+    }
+    static function deleteEndURL( $get_pam)
+    {
+        if (!(strpos($_SERVER['REQUEST_URI'].'', $get_pam))){
+            $adress=$_SERVER['REQUEST_URI'].'';
+        }
+        else{
+            if  (!(strpos($_SERVER['REQUEST_URI'].'', '&'.$get_pam))) {
+                $adress=explode('?'.$get_pam, $_SERVER['REQUEST_URI'].'');
+            }
+            else{
+                $adress=explode('&'.$get_pam, $_SERVER['REQUEST_URI'].'');
+            }
+            $adress=$adress[0];
+        }
+        return $adress;
+    }
 }
 

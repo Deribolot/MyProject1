@@ -9,6 +9,16 @@ class MainController extends Controller
 
     function parseParams($params)
     {
+        if (isset($_GET['func']) & !empty($_GET['func'])){
+            $func=   $_GET['func'];
+            //$_SERVER['REQUEST_URI'] = explode('func', $_SERVER['REQUEST_URI']);
+            var_dump("ДЕТКА, Я ВЕСЬ ТВОЙ! $func");
+            //делай функцию
+            var_dump(($this->getFunction($func,'delete')));
+            var_dump($this->getFunction($func,'set'));
+
+        }
+
         $sAction = 'actionIndex';
 
         if (isset($params[2]) && ($params[2])){
@@ -34,15 +44,10 @@ class MainController extends Controller
                 }
             }
         }
-
-
-
         if (method_exists($this, $sAction))
             $this->action = $sAction;
         else
             throw (new Exception('No such action'));
-
-        var_dump("Hello");
     }
 
     public function actionMenu(){
@@ -89,6 +94,26 @@ class MainController extends Controller
         $this->aContent[] = new ContentNews(News::findById($this->new),$this->mylittleuser,$this->verified_admin, $this->category,'content_news.php');
 
     }
+    protected function getFunction($func,$name){
+        if  (strpos($func, $name)) {
+            $pa_m=explode($name,$func );
+            $function='func'.ucfirst($name);
+            //проверка существования методf
+            if (method_exists($this,$function)) {
+                $this->$function($pa_m[0]);
+                return true;
+            }
+            else return false;
+        }
+        else return false;
+    }
+    protected function funcDelete($pa_m){
+        var_dump("delete");
+    }
+    protected function funcSet($pa_m){
+        var_dump("set");
+    }
+
 
 
 }

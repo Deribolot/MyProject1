@@ -56,18 +56,19 @@ class News extends Messages implements iContentNews
         if ($this->id) {//верни новость и нормальную ссылку ?НАЗАД
             if (News::findById($this->id)){
                 $aResult=$this->getResume($verified_admin,$mylittleuser);
-                //$aResult["text"]
                 $aData=['mytext'=>$aResult["text"] ];
-                var_dump($aData["mytext"] );
                 $aData["myname"]=$aResult["name"];
-                var_dump($aData["myname"] );
                 foreach ($aResult["sheet"] as $column_name => $column_value)
                 {
                     $aData["sheet"][]=$column_value;
                     //var_dump("$column_value");
                 }
-                $answer = explode('new', $_SERVER['REQUEST_URI']);
-                $aData["back"] =  $answer[0];
+                foreach ($aResult["buttons"] as $column_name => $column_value)
+                {
+                   $aData["buttons"][$column_name]= $column_value;
+                   //var_dump("приает");var_dump("$column_name => $column_value");
+                }
+                $aData["back"] = $adress=Object::deleteEndURL( 'new');;
                 /*foreach ($aData["items"] as $column_name => $column_value)
                 {
                     var_dump("$column_value");
@@ -249,6 +250,9 @@ WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categorie
             $aRes .= ((new Categories($aValues))->name) . ", ";
         $aRes=substr ( $aRes, 0 , strlen ( $aRes)-2);
         if ($aRes) $stringNames["sheet"][] = "в категории(иях) ".$aRes."</br>";
+
+        $stringNames["buttons"]=[];
+
         if ($mylittleuser==null){
             //не авторизован
             if ($verified_admin===1){
@@ -263,19 +267,26 @@ WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categorie
             //var_dump("права $mylittleuser->admin_rights");
             if (($mylittleuser->admin_rights)==1){
                 //админ
+                //$adress=Object::deleteEndURL( 'func');
+                //ВЫКИНУТЬ В МЕНЮ
+                $adress=Object::deleteEndURL( 'new');
+                var_dump('адрес '.$adress);
                 $stringNames["sheet"][] = "с id ".$this->id."</br>";
                 if ($verified_admin===1){
                     //новости общие
                     $stringNames["sheet"][] = "пользователем ".$this->login_autor."</br>";
+                    $stringNames["buttons"]["delete"] = $adress.'&func='.$this->id.'delete';
                 }
                 else{
                     if ($verified_admin===0){
                         //новости неодобренные
                         $stringNames["sheet"][] = "пользователем ".$this->login_autor."</br>";
+                        $stringNames["buttons"]= ["delete" =>$adress.'&func='.$this->id.'delete',"set" => $adress.'&func='.$this->id.'set'];
                     }
                     else{
                         //мои новости
                         $stringNames["sheet"][] = "статус новости ".(($this->verified_admin===0)?"не проверена":"проверена")."</br>";
+                        $stringNames["buttons"]= ["delete" => $adress.'&func='.$this->id.'delete',"set" => $adress.'&func='.$this->id.'set'];
                     }
                 }
             }
@@ -299,6 +310,7 @@ WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categorie
         }
         return $stringNames;
     }
+
 
 }
 
