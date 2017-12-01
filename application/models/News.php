@@ -264,13 +264,12 @@ WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categorie
             }
         }
         else{
+            $adress=Object::deleteEndURL( 'new');
+            var_dump('адрес '.$adress);
             //var_dump("права $mylittleuser->admin_rights");
             if (($mylittleuser->admin_rights)==1){
                 //админ
-                //$adress=Object::deleteEndURL( 'func');
                 //ВЫКИНУТЬ В МЕНЮ
-                $adress=Object::deleteEndURL( 'new');
-                var_dump('адрес '.$adress);
                 $stringNames["sheet"][] = "с id ".$this->id."</br>";
                 if ($verified_admin===1){
                     //новости общие
@@ -282,11 +281,16 @@ WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categorie
                         //новости неодобренные
                         $stringNames["sheet"][] = "пользователем ".$this->login_autor."</br>";
                         $stringNames["buttons"]= ["delete" =>$adress.'&func='.$this->id.'delete',"set" => $adress.'&func='.$this->id.'set'];
+
                     }
                     else{
                         //мои новости
-                        $stringNames["sheet"][] = "статус новости ".(($this->verified_admin===0)?"не проверена":"проверена")."</br>";
-                        $stringNames["buttons"]= ["delete" => $adress.'&func='.$this->id.'delete',"set" => $adress.'&func='.$this->id.'set'];
+                        $stringNames["sheet"][] = "ее статус: ".(($this->verified_admin==0)?"не проверена":"проверена")." админом</br>";
+                        $stringNames["buttons"]["delete"] = $adress.'&func='.$this->id.'delete';
+                        //проверка одобренных
+                        if (News::findById($this->id)->verified_admin==0)$stringNames["buttons"]["set"] = $adress.'&func='.$this->id.'set';
+
+
                     }
                 }
             }
@@ -295,6 +299,7 @@ WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categorie
                 if ($verified_admin===1){
                     //новости общие
                     $stringNames["sheet"][] = "пользователем ".$this->login_autor."</br>";
+                    if (News::findById($this->id)->login_autor==$mylittleuser->login) $stringNames["buttons"]["delete"] = $adress.'&func='.$this->id.'delete';
                 }
                 else{
                     if ($verified_admin===0){
@@ -303,7 +308,8 @@ WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categorie
                     }
                     else{
                         //мои новости
-                        $stringNames["sheet"][] = "статус новости ".(($this->verified_admin===0)?"не проверена":"проверена")."</br>";
+                        $stringNames["sheet"][] = "ее статус: ".(($this->verified_admin==0)?"не проверена":"проверена")." админом</br>";
+                        $stringNames["buttons"]["delete"] = $adress.'&func='.$this->id.'delete';
                     }
                 }
             }

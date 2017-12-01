@@ -14,7 +14,7 @@ abstract class Controller {
     /**
      * @param array $params
      */
-	abstract function parseParams($params);
+	abstract protected function parseParams($params);
 
 	function __construct($params = [],$template = 'main.php')
 	{
