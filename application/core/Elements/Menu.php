@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: rv_000
- * Date: 25.10.2017
- * Time: 11:04
- */
 
 class Menu extends View
 {

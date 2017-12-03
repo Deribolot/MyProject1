@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: rv_000
- * Date: 25.10.2017
- * Time: 11:04
- */
 
 class ContentNews extends View{
     /**
      * @param iContentNews $oDataSource
-     * @param  $mylittleuser
+     * @param $mylittleuser
      * @param $verified_admin
      * @param $id_category
      * @param $template

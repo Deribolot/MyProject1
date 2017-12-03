@@ -68,7 +68,7 @@ class News extends Messages implements iContentNews
                    $aData["buttons"][$column_name]= $column_value;
                    //var_dump("приает");var_dump("$column_name => $column_value");
                 }
-                $aData["back"] = $adress=Object::deleteEndURL( 'new');;
+                $aData["back"] = Object::deleteEndURL( 'new');;
                 /*foreach ($aData["items"] as $column_name => $column_value)
                 {
                     var_dump("$column_value");
@@ -265,7 +265,6 @@ WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categorie
         }
         else{
             $adress=Object::deleteEndURL( 'new');
-            var_dump('адрес '.$adress);
             //var_dump("права $mylittleuser->admin_rights");
             if (($mylittleuser->admin_rights)==1){
                 //админ
@@ -317,6 +316,15 @@ WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categorie
         return $stringNames;
     }
 
+    /**
+     * @param $mylittleuser
+     * @return array
+     */
+     function getForm ($mylittleuser,$message){
+         $aData["message"]=$message;
+         ($mylittleuser==null)? $aData["login"]="":$aData["login"]=$mylittleuser->login;
+        return $aData;
+    }
 
 }
 

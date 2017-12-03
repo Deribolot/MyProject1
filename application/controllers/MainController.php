@@ -9,6 +9,7 @@ class MainController extends Controller
 
     function parseParams($params)
     {
+
         $sAction = 'actionIndex';
 
         if (isset($params[2]) && ($params[2])){
@@ -106,7 +107,6 @@ class MainController extends Controller
         $answer?var_dump("Удаление успешно выполнено"):var_dump("Удаление выполнить не удалось");
     }
     protected function funcSet($pa_m){
-        var_dump("Выполнить set");
         $new=News::findById($pa_m);
         $new->verified_admin=1;
         $paramForSave=[];
@@ -115,11 +115,7 @@ class MainController extends Controller
             foreach ( $value1 as $name=>$value)
                 $paramForSave[$name]=$value;
         $answer= $new->saveRecord( $paramForSave);
-
         (($answer) && ((News::findById($pa_m)->verified_admin)==1))?var_dump("Новость одобрена"):var_dump("Новость одобрить не удалось");
-        var_dump((News::findById($pa_m)->id));
-
-
     }
     protected function funcAdmin(){
         if (isset($_GET['func']) & !empty($_GET['func'])){

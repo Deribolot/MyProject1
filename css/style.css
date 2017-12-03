@@ -148,39 +148,47 @@ a {
 
 #menu {
 	border-top: solid 1px #e3e3e3;
-	line-height: 60px;
-	height: 60px;
+	height: 40px;
 	position: relative;
 	font-family: "Open Sans", sans-serif;
+
 }
 
 #menu a {
-	text-transform: uppercase;
+
 	text-decoration: underline;
 	color: #1C1C1C;
 	font-size: 1.2em;
+
 }
 
 #menu a:hover {
 	text-decoration: none;
+
 }
 
 #menu ul {
 	padding: 0 20px 0 20px;
 	list-style: none;
+
 }
 
 #menu ul li {
 	display: inline;
 	padding: 10px 10px 10px 10px;
-	margin: 0 8px 0 8px;
+	margin: 0 2px 0 2px;
+	text-transform: uppercase;
+	line-height: 40px;
+
 }
+
 
 #page {
 	margin: 0;
 	position: relative;
 	width: 900px;
-	padding: 10px 40px 0 40px;
+	padding: 10px 1px 0 1px;
+
 }
 #leftMenu{
 	padding: 0px ;
