@@ -14,26 +14,28 @@ class RegistrationController extends Controller
     }
 
     protected function getPostPam(){
-        $mylittleuser=$this->mylittleuser;
-        if( (Users::findById($mylittleuser->login)) & (Users::findById($mylittleuser->login)->locking==0)) {
-            if (isset($_POST['new']) & isset($_POST['login'])& isset($_POST['name']) & isset($_POST['date']) &!empty($_POST['date'])&!empty($_POST['new']) & !empty($_POST['new']) & !empty($_POST['new']))
+        if (isset($_POST['email']) & isset($_POST['login'])& isset($_POST['password']) & isset($_POST['date']) &!empty($_POST['date'])&!empty($_POST['password']) & !empty($_POST['login']) & !empty($_POST['email']))
+        {
+            //обраюотка данных
+            $login =  $_POST['login'];
+            $date =  $_POST['date'];
+            $email =  $_POST['email'];
+            $password =  $_POST['password'];
+            $paramForSave=['login'=>"$login",'email'=>"$email",'user_password'=>"$password",'data_checkin'=>"$date",'data_assumption'=>"$date",'admin_rights'=>0,'locking'=>0];
+            if (Users::saveRecord( $paramForSave,1))
             {
-                $login =  $_POST['login'];
-                $date =  $_POST['date'];
-                $name =  $_POST['name'];
-                $new =  $_POST['new'];
-                $this->message=$date.' принята новость ('.$login.') с названием ('.$name.') и текстом: ('.$new.')';
-                //require_once 'falidation.php'; // подключаем проверку
-                $paramForSave=['name'=>"$name",'login_autor'=>"$login",'data_create'=>"$date",'text'=>"$new",'verified_admin'=>0,'rating'=>0];
-                News::saveRecord( $paramForSave);
+                $this->message='Добро пожаловать, '.$login.'!';
+                $this->mylittleuser=Users::findById($login);
+                $this->actionIndex(0);
+
+            }else {
+                $this->message = $date . ':  пользователь ' . $login . ' НЕ зарегистрирован. Возможно это имя уже занято, попробуйте снова!';
+                $this->actionIndex(1);
             }
-            else{
-                $this->message="";
-            }
-            $this->actionIndex();
-        }else {
-            $this->message="Вы не можете создавать записи!";
-            $this->actionMessage();
+        }
+        else{
+            $this->message="";
+            $this->actionIndex(1);
         }
     }
 
@@ -46,14 +48,9 @@ class RegistrationController extends Controller
         $this->aLowMenu[] = new Menu((new LowMenu()),$this->mylittleuser,'top_menu.php');
     }
 
-    protected function actionIndex(){
+    protected function actionIndex($rights){
         //форма добавления записи
-        $this->aContent[] = new CreateNews(new News(),$this->mylittleuser,$this->message,'create_news.php');
-    }
-
-    protected function actionMessage(){
-        //форма добавления записи
-        $this->aContent[] = new CreateNews(new News(),null,$this->message,'create_news.php');
+        $this->aContent[] = new Forms(new Users(),$rights,$this->message,'create_users.php');
     }
 }
 ?>

@@ -191,7 +191,7 @@ class Users extends Object
          }
      }
      //сохранение записи
-     public static function saveRecord($params = [])
+     public static function saveRecord($params = [],$rights=null)
      {
          //Если в $params будут элементы одинаковыми ключами, то сохранится последнее
          $class = get_called_class();
@@ -208,7 +208,7 @@ class Users extends Object
          }
          if ((array_key_exists('login',$paramsForSave))&&(count($paramsForSave)==count($columnNames))) {
              if ($class::findById($paramsForSave['login']) ) {
-                 if (($class::CheckUniqueness($paramsForSave))&&($class::CheckExistence($paramsForSave))) {
+                 if (($class::CheckUniqueness($paramsForSave))&&($class::CheckExistence($paramsForSave))&& ($rights==null)) {
                      var_dump(" Передан для обновления");
                      return $class::updateRecord($paramsForSave);
                  }
@@ -219,19 +219,15 @@ class Users extends Object
                  }
              }
              else {
-                 var_dump("Записи с таким ключом не существует! В обновлении отказать!");
-                 return false;
-             }
-         }
-         elseif ((!(array_key_exists('login',$paramsForSave)))&&(count($paramsForSave)==(count($columnNames)-1))) {
-             if (($class::CheckUniqueness($paramsForSave))&&($class::CheckExistence($paramsForSave))) {
-                 var_dump(" Передан для добавления");
-                 return $class::addRecord($paramsForSave);
-             }
-             else {
-                 var_dump(" Запись не может быть сохранена, по следующим причинам: </br> значения, которые должны быть уникальными, не являются таковыми; </br> 
+                 if (($class::CheckUniqueness($paramsForSave))&&($class::CheckExistence($paramsForSave))) {
+                     var_dump(" Передан для добавления");
+                     return $class::addRecord($paramsForSave);
+                 }
+                 else {
+                     var_dump(" Запись не может быть сохранена, по следующим причинам: </br> значения, которые должны быть уникальными, не являются таковыми; </br> 
                             значения полей, являющиеся ссылками, не найдены или недоступны из-за наложенных ограничений.");
-                 return false;
+                     return false;
+                 }
              }
          }
          else {
@@ -263,4 +259,14 @@ class Users extends Object
              return false;
          }
      }
+    /**
+     * @param $rights
+     * @param $message
+     * @return array
+     */
+    function getForm($rights,$message){
+        $aData["message"]=$message;
+        $aData["rights"]=$rights;
+        return $aData;
+    }
 }

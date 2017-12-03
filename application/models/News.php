@@ -318,6 +318,7 @@ WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categorie
 
     /**
      * @param $mylittleuser
+     * @param $message
      * @return array
      */
      function getForm ($mylittleuser,$message){

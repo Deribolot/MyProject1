@@ -22,10 +22,9 @@ class CreateController extends Controller
                 $date =  $_POST['date'];
                 $name =  $_POST['name'];
                 $new =  $_POST['new'];
-                $this->message=$date.' принята новость ('.$login.') с названием ('.$name.') и текстом: ('.$new.')';
-                //require_once 'falidation.php'; // подключаем проверку
                 $paramForSave=['name'=>"$name",'login_autor'=>"$login",'data_create'=>"$date",'text'=>"$new",'verified_admin'=>0,'rating'=>0];
-                News::saveRecord( $paramForSave);
+                News::saveRecord( $paramForSave)?   $this->message=$date.':  новость  с названием ('.$name.') от пользователя '.$login.' УСПЕШНО принята':
+                    $this->message=$date.':  новость  с названием ('.$name.') от поьльзователя '.$login.' НЕ принята. Проверьте ее уникальность и попробуйте снова!';
             }
             else{
                 $this->message="";
