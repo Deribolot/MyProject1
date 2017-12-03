@@ -6,14 +6,12 @@
  * Time: 11:06
  */
 
-interface iContentNews
+interface iContentCategories
 {
-    /**
+    /*
      * @param $mylittleuser
      * @param $verified_admin
-     * @param $id_category
      * @return array
      */
-    function getData($mylittleuser,$verified_admin,$id_category);
-
+    function getList($mylittleuser,$verified_admin);
 }

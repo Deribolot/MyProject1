@@ -219,12 +219,20 @@ WHERE news.id not in (select relationships.id_news from relationships) AND  news
                     $oQuery = self::$db->prepare("SELECT news.* FROM news
 INNER JOIN relationships ON id_news= news.id
 INNER JOIN categories ON id_category= categories.id
-WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categories.id=:need_id_category");
+WHERE  news.login_autor=:need_login AND categories.id=:need_id_category");
                     $oQuery->execute(['need_login' => Users::findById($mylittleuser->login)->login, 'need_id_category' => $id_category]);
                     $oQuery->execute();
                     foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues)
                         $aRes[] = new News($aValues);
                 }
+            }
+            else
+            {
+                //выдать все
+                $oQuery = self::$db->prepare("SELECT news.* FROM news");
+                $oQuery->execute();
+                foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues)
+                    $aRes[] = new News($aValues);
             }
         }
         return $aRes;
@@ -241,15 +249,16 @@ WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categorie
         $stringNames["sheet"][] = "новость оставлена " . $mydate[0] . " в " . $mydate[1] . "</br>";
         $oQuery = self::$db->prepare("SELECT DISTINCT categories.* FROM news
         INNER JOIN relationships ON id_news=:need_id_news
-        INNER JOIN categories ON id_category= categories.id
-        WHERE categories.verified_admin=1");
+        INNER JOIN categories ON id_category= categories.id");
         $oQuery->execute(['need_id_news' => $this->id]);
         $oQuery->execute();
         $aRes = "";
-        foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues)
-            $aRes .= ((new Categories($aValues))->name) . ", ";
+        foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues) {
+            $v_a=((new Categories($aValues))->verified_admin==1)? '':' (неодобренной)';
+            $aRes .= ((new Categories($aValues))->name) .$v_a.', ';
+        }
         $aRes=substr ( $aRes, 0 , strlen ( $aRes)-2);
-        if ($aRes) $stringNames["sheet"][] = "в категории(иях) ".$aRes."</br>";
+        if ($aRes) $stringNames["sheet"][] = "в категории(иях): ".$aRes."</br>";
 
         $stringNames["buttons"]=[];
 
@@ -257,7 +266,7 @@ WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categorie
             //не авторизован
             if ($verified_admin===1){
                 //новости общие
-                $stringNames["sheet"][] = "пользователем ".$this->login_autor."</br>";
+                $stringNames["sheet"][] = 'пользователем '.$this->login_autor. (Users::findById($this->login_autor)->locking==0?'':', который забанен'). '</br>';
             }
             else{
                 var_dump("У Вас нет таких прав, и я Вам ничего не должен!");
@@ -272,19 +281,19 @@ WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categorie
                 $stringNames["sheet"][] = "с id ".$this->id."</br>";
                 if ($verified_admin===1){
                     //новости общие
-                    $stringNames["sheet"][] = "пользователем ".$this->login_autor."</br>";
+                    $stringNames["sheet"][] = 'пользователем '.$this->login_autor. (Users::findById($this->login_autor)->locking==0?'':', который забанен'). '</br>';
                     $stringNames["buttons"]["delete"] = $adress.'&func='.$this->id.'delete';
                 }
                 else{
                     if ($verified_admin===0){
                         //новости неодобренные
-                        $stringNames["sheet"][] = "пользователем ".$this->login_autor."</br>";
+                        $stringNames["sheet"][] = 'пользователем '.$this->login_autor. (Users::findById($this->login_autor)->locking==0?'':', который забанен'). '</br>';
                         $stringNames["buttons"]= ["delete" =>$adress.'&func='.$this->id.'delete',"set" => $adress.'&func='.$this->id.'set'];
 
                     }
                     else{
                         //мои новости
-                        $stringNames["sheet"][] = "ее статус: ".(($this->verified_admin==0)?"не проверена":"проверена")." админом</br>";
+                        $stringNames["sheet"][] = "ее статус - ".(($this->verified_admin==0)?"не проверена":"проверена")." админом</br>";
                         $stringNames["buttons"]["delete"] = $adress.'&func='.$this->id.'delete';
                         //проверка одобренных
                         if (News::findById($this->id)->verified_admin==0)$stringNames["buttons"]["set"] = $adress.'&func='.$this->id.'set';
@@ -297,7 +306,7 @@ WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categorie
                 //пользователь
                 if ($verified_admin===1){
                     //новости общие
-                    $stringNames["sheet"][] = "пользователем ".$this->login_autor."</br>";
+                    $stringNames["sheet"][] = 'пользователем '.$this->login_autor. (Users::findById($this->login_autor)->locking==0?'':', который забанен'). '</br>';
                     if (News::findById($this->id)->login_autor==$mylittleuser->login) $stringNames["buttons"]["delete"] = $adress.'&func='.$this->id.'delete';
                 }
                 else{
@@ -307,7 +316,7 @@ WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categorie
                     }
                     else{
                         //мои новости
-                        $stringNames["sheet"][] = "ее статус: ".(($this->verified_admin==0)?"не проверена":"проверена")." админом</br>";
+                        $stringNames["sheet"][] = "ее статус - ".(($this->verified_admin==0)?"не проверена":"проверена")." админом</br>";
                         $stringNames["buttons"]["delete"] = $adress.'&func='.$this->id.'delete';
                     }
                 }
@@ -316,6 +325,7 @@ WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categorie
         return $stringNames;
     }
 
+
     /**
      * @param $mylittleuser
      * @param $message
@@ -323,7 +333,12 @@ WHERE categories.verified_admin=1 AND news.login_autor=:need_login AND categorie
      */
      function getForm ($mylittleuser,$message){
          $aData["message"]=$message;
-         ($mylittleuser==null)? $aData["login"]="":$aData["login"]=$mylittleuser->login;
+         if ($mylittleuser==null) {
+             $aData["login"]="";
+         } else{
+             $aData["login"]=$mylittleuser->login;
+             $aData["categories"]=Categories::findList(null,null);
+         }
         return $aData;
     }
 

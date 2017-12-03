@@ -17,22 +17,28 @@ class LoginController extends Controller
     {
         $mylittleuser = $this->mylittleuser;
         if (isset($_POST['login']) & isset($_POST['password']) & !empty($_POST['password']) & !empty($_POST['login'])) {
-            //обраюотка данных
-            $login = $_POST['login'];
-            $password = $_POST['password'];
-            if ((Users::findById($login)->user_password == $password) && (Users::findById($login)->locking == 0)) {
-                $this->message = 'Добро пожаловать,' . $login . '!';
-                $this->mylittleuser = Users::findById($login);
-                $this->actionIndex(0);
-
-            } elseif ((Users::findById($login)->user_password == $password) && (Users::findById($login)->locking == 1)) {
-                $this->message = 'Поздравляю, ' . $login . '! Ты забанен:)';
-                $this->mylittleuser = null;
-                $this->actionIndex(0);
-            } else {
-                $this->message = 'Такого пользователя не существует! Необходима регистрация';
+            if ( str_replace(" ","",$_POST['password'])=="" ){
+                $this->message = 'Пустой пароль!';
                 $this->mylittleuser = null;
                 $this->actionIndex(1);
+            } else{
+                //обраюотка данных
+                $login = $_POST['login'];
+                $password = $_POST['password'];
+                if ((Users::findById($login)->user_password == $password) && (Users::findById($login)->locking == 0)) {
+                    $this->message = 'Добро пожаловать,' . $login . '!';
+                    $this->mylittleuser = Users::findById($login);
+                    $this->actionIndex(0);
+
+                } elseif ((Users::findById($login)->user_password == $password) && (Users::findById($login)->locking == 1)) {
+                    $this->message = 'Поздравляю, ' . $login . '! Ты забанен:)';
+                    $this->mylittleuser = null;
+                    $this->actionIndex(0);
+                } else {
+                    $this->message = 'Такого пользователя не существует! Необходима регистрация';
+                    $this->mylittleuser = null;
+                    $this->actionIndex(1);
+                }
             }
 
         } else {

@@ -27,7 +27,6 @@ class Route
 		unset($routes[0]);
 
 		//ОПРЕДЕЛЕНИЕ КОНТРОЛЛЕРА
-        var_dump("routes $routes[1] & $routes[2]");
 		//isset -- определяет, установлена ли переменная
 		if ( isset($routes[1]) && ($routes[1]) )
 		    //ucfirst --  преобразует первый символ строки в верхний регистр

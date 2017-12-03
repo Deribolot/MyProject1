@@ -31,21 +31,17 @@ abstract class Controller {
                 $this->mylittleuser=Users::findById($login);
                 if(!$this->mylittleuser->locking) {
                     if ($this->mylittleuser->admin_rights) {
-                        var_dump("Админ");
                     } else {
-                        var_dump("Пользователь");
                     }
                 }
                 else
                 {
-                    var_dump("Заблокирован");
                     $this->mylittleuser=null;
                 }
 
             }
             else
             {
-                var_dump("Общий доступ");
                 $this->mylittleuser=null;
             }
         }

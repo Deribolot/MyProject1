@@ -15,13 +15,11 @@ class MainController extends Controller
         if (isset($params[2]) && ($params[2])){
             $sAction = 'actionCategory';
             $this->category = $params[2];
-            var_dump("это 2");
             if (isset($_GET['new']) & !empty($_GET['new'])) {
 
                 if (News::findById($_GET['new'])){
                     $this->new=   $_GET['new'];
                     $sAction = 'actionCategoryNew';
-                    var_dump("это 3");
                 }
             }
         }
@@ -31,7 +29,6 @@ class MainController extends Controller
                 if (News::findById($_GET['new'])){
                     $this->new=   $_GET['new'];
                     $sAction = 'actionNew';
-                    var_dump("это 4");
                 }
             }
         }
@@ -86,14 +83,14 @@ class MainController extends Controller
         $this->aContent[] = new ContentNews(News::findById($this->new),$this->mylittleuser,$this->verified_admin, $this->category,'content_news.php');
 
     }
-    protected function getFunction($func,$name){
+    protected function getFunction($func,$name,$className,$id='id'){
         if  (strpos($func, $name)) {
             $pa_m=explode($name,$func );
             $function='func'.ucfirst($name);
             //проверка существования метод
             if (method_exists($this,$function)) {
-                if (News::findById($pa_m[0])->id) {
-                    $this->$function($pa_m[0]);
+                if ($className::findById($pa_m[0])->$id) {
+                    $this->$function($pa_m[0],$className);
                     return true;
                 }
                 else return false;
@@ -102,20 +99,19 @@ class MainController extends Controller
         }
         else return false;
     }
-    protected function funcDelete($pa_m){
-        $answer=News::deleteById($pa_m);
+    protected function funcDelete($pa_m,$className){
+        $answer=$className::deleteById($pa_m);
         $answer?var_dump("Удаление успешно выполнено"):var_dump("Удаление выполнить не удалось");
     }
-    protected function funcSet($pa_m){
-        $new=News::findById($pa_m);
+    protected function funcSet($pa_m,$className){
+        $new=$className::findById($pa_m);
         $new->verified_admin=1;
         $paramForSave=[];
         $ar=(array)$new;
         foreach ( $ar as $value1)
             foreach ( $value1 as $name=>$value)
-                $paramForSave[$name]=$value;
         $answer= $new->saveRecord( $paramForSave);
-        (($answer) && ((News::findById($pa_m)->verified_admin)==1))?var_dump("Новость одобрена"):var_dump("Новость одобрить не удалось");
+        (($answer) && (($className::findById($pa_m)->verified_admin)==1))?var_dump("Одобрение выполнено успешно"):var_dump("Одобрение выполнить не удалось");
     }
     protected function funcAdmin(){
         if (isset($_GET['func']) & !empty($_GET['func'])){
@@ -127,7 +123,7 @@ class MainController extends Controller
                 $buttons=['delete','set'];
                 foreach ($buttons as $value)
                 {
-                    $this->getFunction($func,$value);
+                    $this->getFunction($func,$value,'News');
                 }
             }
             else {
@@ -137,7 +133,7 @@ class MainController extends Controller
                     //Удалить, если это его новость
                     If(News::findById($id_new[0])->login_autor==$this->mylittleuser->login)
                     {
-                        $this->getFunction($func,'delete');
+                        $this->getFunction($func,'delete','News');
                         var_dump("Ой, удаляй, надоел! $func");
                     }
                     else{

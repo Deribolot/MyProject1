@@ -59,7 +59,6 @@ class Categories extends Object implements iMenu
     {
         //$mylittleuser - объкт Users, авторизованный пользователь
         //$verified_admin - состояние проверки новости, 0 - не проверена, 1 - проверена
-        var_dump("verified_admin $verified_admin");
         $aData = ['title' => 'Категории'];
         $aData['items'] = [];
         if ($verified_admin === 1 or $verified_admin === 0) {
@@ -119,19 +118,56 @@ class Categories extends Object implements iMenu
                 $aRes[] = new Categories($aValues);
         }
         else{
-            var_dump("МОИ КАТЕГОРИИ");
             //Вывести категории, в которых писал $mylittleuser для моих новостей
             if (Users::findById($mylittleuser->login)->login) {
                 $oQuery = self::$db->prepare("SELECT DISTINCT  categories.* FROM  categories
                 INNER JOIN relationships on  categories.id = id_category 
                 INNER JOIN news on news.id = id_news
-                WHERE news.login_autor=:need_login AND  categories.verified_admin=1 ");
+                WHERE news.login_autor=:need_login ");
                 $oQuery->execute(['need_login' => Users::findById($mylittleuser->login)->login]);
                 $oQuery->execute();
                 foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues)
                     $aRes[] = new Categories($aValues);
+            }else{
+                //выдать все
+                $oQuery = self::$db->prepare("SELECT DISTINCT  * FROM  categories");
+                $oQuery->execute();
+                foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues)
+                    $aRes[] = new Categories($aValues);
             }
+
         }
         return $aRes;
+    }
+    static function getList ($mylittleuser,$verified_admin){
+        $aData=[];
+        $aData['title']="";
+        if (Users::findById($mylittleuser->login)->admin_rights==1) {
+            if($verified_admin === 1 or $verified_admin === 0){
+                $aData['title']=($verified_admin === 1) ? "Одобренные":"Неодобренные";
+                $oQuery = self::$db->prepare("SELECT DISTINCT  * FROM  categories
+                    WHERE categories.verified_admin=:need_verified_admin ");
+                $oQuery->execute(['need_verified_admin' => $verified_admin]);
+                $oQuery->execute();
+                foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues)
+                    $aRes[] = new Categories($aValues);
+            }
+            else{
+                //выдать все
+                $oQuery = self::$db->prepare("SELECT DISTINCT  * FROM  categories");
+                $oQuery->execute();
+                foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues)
+                    $aRes[] = new Categories($aValues);
+            }
+            foreach ($aRes as $oCategories) {
+                (Categories::findById($oCategories->id)->verified_admin==0)? $string= ['delete','set']:$string= ['delete'];
+                $aData['items'][] = ['title' => $oCategories->name,'buttons'=>$string,'back'=>$_SERVER['REQUEST_URI'].'','id'=> $oCategories->id];
+            }
+            if(count($aRes)<1) $aData['title']="Нет подходящих категорий";
+        }
+        else {
+            var_dump("У Вас нет таких прав, и я Вам ничего не должен!");
+        }
+        return $aData;
     }
 }

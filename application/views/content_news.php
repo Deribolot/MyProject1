@@ -12,7 +12,7 @@
     <? endforeach; ?>
     <a href="<?=$aData["back"]?>"><img src="images/back.png" width="30" height="30" alt="back"></a>
     <? if($aData["buttons"]!=[]): ?><? foreach ($aData["buttons"] as $name => $value): ?>
-        <a href="<?=  $value ?>"><img src="images/<?=  $name ?>.png" width="30" height="30" alt="<?=  $name ?>"></a>
+        <a href="<?=  $value ?>"><img src="<?$_SERVER['DOCUMENT_ROOT']?>/images/<?=  $name ?>.png" width="30" height="30" alt="<?=  $name ?>"></a>
     <? endforeach; ?><? endif ?>
 
 </div>

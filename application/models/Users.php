@@ -25,21 +25,23 @@ class Users extends Object
          return 'users';
      }
 
-    static  function CheckUniqueness($params = []){
+    static  function CheckUniqueness($params = [],$r){
         $class = get_called_class();
         $table = $class::TableName();
-        if (array_key_exists('id',$params)) {
+        if ($r) {
             $oQuery = Object::$db->prepare("SELECT * FROM {$table} WHERE email=:need_email AND login!=:need_login");
             $oQuery->execute(['need_email' => $params['email'],'need_login' => $params['login']]);
             $aRes = $oQuery->fetchAll(PDO::FETCH_ASSOC);
+            var_dump(3);
             return $aRes? false:true;
-
-        }
+       }
         else {
-            $oQuery = Object::$db->prepare("SELECT * FROM {$table} WHERE email=:need_email");
+           $oQuery = Object::$db->prepare("SELECT * FROM {$table} WHERE email=:need_email");
             $oQuery->execute(['need_email' => $params['email']]);
             $aRes = $oQuery->fetchAll(PDO::FETCH_ASSOC);
+            var_dump(4);
             return $aRes? false:true;
+
         }
     }
     static function CheckExistence($params = [])
@@ -208,7 +210,8 @@ class Users extends Object
          }
          if ((array_key_exists('login',$paramsForSave))&&(count($paramsForSave)==count($columnNames))) {
              if ($class::findById($paramsForSave['login']) ) {
-                 if (($class::CheckUniqueness($paramsForSave))&&($class::CheckExistence($paramsForSave))&& ($rights==null)) {
+                 var_dump(1);
+                 if (($class::CheckUniqueness($paramsForSave,1))&&($class::CheckExistence($paramsForSave))&& ($rights==null)) {
                      var_dump(" Передан для обновления");
                      return $class::updateRecord($paramsForSave);
                  }
@@ -219,7 +222,8 @@ class Users extends Object
                  }
              }
              else {
-                 if (($class::CheckUniqueness($paramsForSave))&&($class::CheckExistence($paramsForSave))) {
+                 var_dump(2);
+                 if (($class::CheckUniqueness($paramsForSave,0))&&($class::CheckExistence($paramsForSave))) {
                      var_dump(" Передан для добавления");
                      return $class::addRecord($paramsForSave);
                  }
@@ -267,6 +271,68 @@ class Users extends Object
     function getForm($rights,$message){
         $aData["message"]=$message;
         $aData["rights"]=$rights;
+        return $aData;
+    }
+    static function getList ($mylittleuser,$verified_admin){
+        $aData=[];
+        $aData['title']="";
+        if (Users::findById($mylittleuser->login)->admin_rights==1) {
+            switch ($verified_admin){
+                case 1:
+                    $aData['title']="Админы";
+                    $need_locking=0;
+                    $need_rights=1;
+                    $oQuery = self::$db->prepare("SELECT DISTINCT  * FROM  users WHERE locking=:need_locking AND  admin_rights=:need_rights ");
+                    $oQuery->execute(['need_locking' => $need_locking,'need_rights' => $need_rights]);
+                    $oQuery->execute();
+                    foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues)
+                        $aRes[] = new Users($aValues);
+                    break;
+                case 2:
+                    $aData['title']="Обычные";
+                    $need_locking=0;
+                    $need_rights=0;
+                    $oQuery = self::$db->prepare("SELECT DISTINCT  * FROM  users WHERE locking=:need_locking AND  admin_rights=:need_rights ");
+                    $oQuery->execute(['need_locking' => $need_locking,'need_rights' => $need_rights]);
+                    $oQuery->execute();
+                    foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues)
+                        $aRes[] = new Users($aValues);
+                    break;
+                case 3:
+                    $aData['title']="Забаненные";
+                    $need_locking=1;
+                    $need_rights=0;
+                    $oQuery = self::$db->prepare("SELECT DISTINCT  * FROM  users WHERE locking=:need_locking AND  admin_rights=:need_rights ");
+                    $oQuery->execute(['need_locking' => $need_locking,'need_rights' => $need_rights]);
+                    $oQuery->execute();
+                    foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues)
+                        $aRes[] = new Users($aValues);
+                    break;
+                default: $oQuery = self::$db->prepare("SELECT DISTINCT  * FROM  users");
+                    $oQuery->execute();
+                    foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues)
+                        $aRes[] = new Users($aValues);
+            }
+            foreach ($aRes as $oCategories) {
+                if (Users::findById($oCategories->login)->admin_rights==1){
+                    //админ
+                    $string= ['user','locking','delete'];
+                }else{
+                    if (Users::findById($oCategories->login)->locking==1){
+                        //бан
+                        $string= ['adminr','user','delete'];
+                    }else{
+                        //обычный пользователь
+                        $string= ['adminr','locking','delete'];
+                    }
+                }
+                $aData['items'][] = ['title' => $oCategories->login,'buttons'=>$string,'back'=>$_SERVER['REQUEST_URI'].'','id'=> $oCategories->login];
+            }
+            if(count($aRes)<1) $aData['title']="Нет подходящих пользователей";
+        }
+        else {
+            var_dump("У Вас нет таких прав, и я Вам ничего не должен!");
+        }
         return $aData;
     }
 }
