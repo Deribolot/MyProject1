@@ -172,12 +172,7 @@ class News extends Messages implements iContentNews
             {
                 //Вывести одобренные/неодобренные все новости
                 $oQuery = self::$db->prepare("SELECT DISTINCT news.* FROM news
-INNER JOIN relationships ON id_news= news.id
-INNER JOIN categories ON id_category= categories.id
-WHERE  news.verified_admin=:need_verified_admin AND categories.verified_admin=1
-UNION ALL 
-SELECT DISTINCT news.* FROM news
-WHERE news.id not in (select relationships.id_news from relationships) AND  news.verified_admin=:need_verified_admin
+WHERE  news.verified_admin=:need_verified_admin 
 ");
                 $oQuery->execute(['need_verified_admin' => $verified_admin]);
                 $oQuery->execute();
@@ -190,7 +185,7 @@ WHERE news.id not in (select relationships.id_news from relationships) AND  news
                 $oQuery = self::$db->prepare("SELECT news.* FROM news
 INNER JOIN relationships ON id_news= news.id
 INNER JOIN categories ON id_category= categories.id
-WHERE categories.verified_admin=1 AND news.verified_admin=:need_verified_admin AND categories.id=:need_id_category");
+WHERE news.verified_admin=:need_verified_admin AND categories.id=:need_id_category");
                 $oQuery->execute(['need_verified_admin' => $verified_admin,'need_id_category' => $id_category]);
                 $oQuery->execute();
                 foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues)
@@ -203,13 +198,7 @@ WHERE categories.verified_admin=1 AND news.verified_admin=:need_verified_admin A
             if (Users::findById($mylittleuser->login)->login) {
                 if ($id_category === null) {
                     //Вывести мои новости
-                    $oQuery = self::$db->prepare("SELECT DISTINCT news.* FROM news
-INNER JOIN relationships ON id_news= news.id
-INNER JOIN categories ON id_category= categories.id
-WHERE  news.login_autor=:need_login AND categories.verified_admin=1
-UNION ALL 
-SELECT DISTINCT news.* FROM news
-WHERE news.id not in (select relationships.id_news from relationships) AND  news.login_autor=:need_login");
+                    $oQuery = self::$db->prepare("SELECT DISTINCT news.* FROM news WHERE  news.login_autor=:need_login ");
                     $oQuery->execute(['need_login' => Users::findById($mylittleuser->login)->login]);
                     $oQuery->execute();
                     foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues)
@@ -247,25 +236,24 @@ WHERE  news.login_autor=:need_login AND categories.id=:need_id_category");
         $stringNames["text"] = $this->text . "</br>";
         $mydate = explode(' ', $this->data_create);
         $stringNames["sheet"][] = "новость оставлена " . $mydate[0] . " в " . $mydate[1] . "</br>";
-        $oQuery = self::$db->prepare("SELECT DISTINCT categories.* FROM news
-        INNER JOIN relationships ON id_news=:need_id_news
-        INNER JOIN categories ON id_category= categories.id");
-        $oQuery->execute(['need_id_news' => $this->id]);
-        $oQuery->execute();
-        $aRes = "";
-        foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues) {
-            $v_a=((new Categories($aValues))->verified_admin==1)? '':' (неодобренной)';
-            $aRes .= ((new Categories($aValues))->name) .$v_a.', ';
-        }
-        $aRes=substr ( $aRes, 0 , strlen ( $aRes)-2);
-        if ($aRes) $stringNames["sheet"][] = "в категории(иях): ".$aRes."</br>";
-
         $stringNames["buttons"]=[];
-
+        $v_a= ' (неодобренной)';
         if ($mylittleuser==null){
             //не авторизован
             if ($verified_admin===1){
                 //новости общие
+                $oQuery = self::$db->prepare("SELECT DISTINCT  categories.* FROM  categories
+                INNER JOIN relationships on  categories.id = id_category 
+                INNER JOIN news on news.id = id_news
+                WHERE news.id=:need_id AND categories.verified_admin=1 ");
+                $oQuery->execute(['need_id'=>$this->id]);
+                $oQuery->execute();
+                $aRes = "";
+                foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues) {
+                    $aRes .= ((new Categories($aValues))->name) .', ';
+                }
+                $aRes=substr ( $aRes, 0 , strlen ( $aRes)-2);
+                if ($aRes) $stringNames["sheet"][] = "в категории(иях): ".$aRes."</br>";
                 $stringNames["sheet"][] = 'пользователем '.$this->login_autor. (Users::findById($this->login_autor)->locking==0?'':', который забанен'). '</br>';
             }
             else{
@@ -277,6 +265,18 @@ WHERE  news.login_autor=:need_login AND categories.id=:need_id_category");
             //var_dump("права $mylittleuser->admin_rights");
             if (($mylittleuser->admin_rights)==1){
                 //админ
+                $oQuery = self::$db->prepare("SELECT DISTINCT  categories.* FROM  categories
+                INNER JOIN relationships on  categories.id = id_category 
+                INNER JOIN news on news.id = id_news
+                WHERE news.id=:need_id  ");
+                $oQuery->execute(['need_id'=>$this->id]);
+                $oQuery->execute();
+                $aRes = "";
+                foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues) {
+                    $aRes .= ((new Categories($aValues))->name) .', ';
+                }
+                $aRes=substr ( $aRes, 0 , strlen ( $aRes)-2);
+                if ($aRes) $stringNames["sheet"][] = "в категории(иях): ".$aRes.$v_a."</br>";
                 //ВЫКИНУТЬ В МЕНЮ
                 $stringNames["sheet"][] = "с id ".$this->id."</br>";
                 if ($verified_admin===1){
@@ -286,6 +286,7 @@ WHERE  news.login_autor=:need_login AND categories.id=:need_id_category");
                 }
                 else{
                     if ($verified_admin===0){
+
                         //новости неодобренные
                         $stringNames["sheet"][] = 'пользователем '.$this->login_autor. (Users::findById($this->login_autor)->locking==0?'':', который забанен'). '</br>';
                         $stringNames["buttons"]= ["delete" =>$adress.'&func='.$this->id.'delete',"set" => $adress.'&func='.$this->id.'set'];
@@ -301,11 +302,40 @@ WHERE  news.login_autor=:need_login AND categories.id=:need_id_category");
 
                     }
                 }
+
             }
             else{
+
                 //пользователь
                 if ($verified_admin===1){
                     //новости общие
+                    if ($this->login_autor==$mylittleuser->login) {
+                        $oQuery = self::$db->prepare("SELECT DISTINCT  categories.* FROM  categories
+                INNER JOIN relationships on  categories.id = id_category 
+                INNER JOIN news on news.id = id_news
+                WHERE news.id=:need_id  ");
+                        $oQuery->execute(['need_id'=>$this->id]);
+                        $oQuery->execute();
+                        $aRes = "";
+                        foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues) {
+                            $aRes .= ((new Categories($aValues))->name) .', ';
+                        }
+                        $aRes=substr ( $aRes, 0 , strlen ( $aRes)-2);
+                        if ($aRes) $stringNames["sheet"][] = "в категории(иях): ".$aRes.$v_a."</br>";
+                    }else{
+                        $oQuery = self::$db->prepare("SELECT DISTINCT  categories.* FROM  categories
+                INNER JOIN relationships on  categories.id = id_category 
+                INNER JOIN news on news.id = id_news
+                WHERE news.id=:need_id AND categories.verified_admin=1 ");
+                        $oQuery->execute(['need_id'=>$this->id]);
+                        $oQuery->execute();
+                        $aRes = "";
+                        foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues) {
+                            $aRes .= ((new Categories($aValues))->name) .', ';
+                        }
+                        $aRes=substr ( $aRes, 0 , strlen ( $aRes)-2);
+                        if ($aRes) $stringNames["sheet"][] = "в категории(иях): ".$aRes."</br>";
+                    }
                     $stringNames["sheet"][] = 'пользователем '.$this->login_autor. (Users::findById($this->login_autor)->locking==0?'':', который забанен'). '</br>';
                     if (News::findById($this->id)->login_autor==$mylittleuser->login) $stringNames["buttons"]["delete"] = $adress.'&func='.$this->id.'delete';
                 }
@@ -316,6 +346,18 @@ WHERE  news.login_autor=:need_login AND categories.id=:need_id_category");
                     }
                     else{
                         //мои новости
+                        $oQuery = self::$db->prepare("SELECT DISTINCT  categories.* FROM  categories
+                INNER JOIN relationships on  categories.id = id_category 
+                INNER JOIN news on news.id = id_news
+                WHERE news.id=:need_id  ");
+                        $oQuery->execute(['need_id'=>$this->id]);
+                        $oQuery->execute();
+                        $aRes = "";
+                        foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues) {
+                            $aRes .= ((new Categories($aValues))->name) .', ';
+                        }
+                        $aRes=substr ( $aRes, 0 , strlen ( $aRes)-2);
+                        if ($aRes) $stringNames["sheet"][] = "в категории(иях): ".$aRes.$v_a."</br>";
                         $stringNames["sheet"][] = "ее статус - ".(($this->verified_admin==0)?"не проверена":"проверена")." админом</br>";
                         $stringNames["buttons"]["delete"] = $adress.'&func='.$this->id.'delete';
                     }

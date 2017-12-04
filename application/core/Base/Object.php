@@ -168,7 +168,7 @@ abstract class Object
                 return false;
             }
         }
-        elseif ((!(array_key_exists('id',$paramsForSave)))&&(count($paramsForSave)==(count($columnNames)-1))) {
+        elseif (!(array_key_exists('id',$paramsForSave))&&(count($paramsForSave)==(count($columnNames)-1))) {
             if (($class::CheckUniqueness($paramsForSave))&&($class::CheckExistence($paramsForSave))) {
                 var_dump(" Передан для добавления");
                 return $class::addRecord($paramsForSave);

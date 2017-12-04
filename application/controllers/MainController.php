@@ -110,6 +110,7 @@ class MainController extends Controller
         $ar=(array)$new;
         foreach ( $ar as $value1)
             foreach ( $value1 as $name=>$value)
+                $paramForSave[$name]=$value;
         $answer= $new->saveRecord( $paramForSave);
         (($answer) && (($className::findById($pa_m)->verified_admin)==1))?var_dump("Одобрение выполнено успешно"):var_dump("Одобрение выполнить не удалось");
     }
@@ -118,7 +119,7 @@ class MainController extends Controller
             $func=$_GET['func'];
             if ($this->mylittleuser->admin_rights==1){
                 //АДМИН
-                var_dump("Админ, Я ВЕСЬ ТВОЙ! $func");
+                var_dump("Админ, Я ВЕСЬ ТВОЙ!");
                 //делай функцию
                 $buttons=['delete','set'];
                 foreach ($buttons as $value)

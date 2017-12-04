@@ -112,6 +112,7 @@ class Categories extends Object implements iMenu
             INNER JOIN relationships on  categories.id = id_category 
             INNER JOIN news on news.id = id_news
             WHERE news.verified_admin=:need_verified_admin AND  categories.verified_admin=1 ");
+
             $oQuery->execute(['need_verified_admin' => $verified_admin]);
             $oQuery->execute();
             foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues)
@@ -161,9 +162,9 @@ class Categories extends Object implements iMenu
             }
             foreach ($aRes as $oCategories) {
                 (Categories::findById($oCategories->id)->verified_admin==0)? $string= ['delete','set']:$string= ['delete'];
-                $aData['items'][] = ['title' => $oCategories->name,'buttons'=>$string,'back'=>$_SERVER['REQUEST_URI'].'','id'=> $oCategories->id];
+                $aData['items'][] = ['title' => $oCategories->name,'buttons'=>$string,'back'=>Object::deleteEndURL('func').'','id'=> $oCategories->id];
             }
-            if(count($aRes)<1) $aData['title']="Нет подходящих категорий";
+            if(count($aRes)<1) {$aData['title']="Нет подходящих категорий";$aData['items']=[];}
         }
         else {
             var_dump("У Вас нет таких прав, и я Вам ничего не должен!");

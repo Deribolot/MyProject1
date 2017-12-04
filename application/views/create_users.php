@@ -16,7 +16,7 @@
             <div ><input type='email' name='email' size="30" value='' placeholder="Введите свой e-mail" required maxlength="25"></div>
             <div >Пароль:</div>
             <div ><input type='password' name='password' size="30" value="" placeholder="Введите пароль" required maxlength="15"></div>
-            <div ><INPUT type=SUBMIT VALUE=Отправить><INPUT type="reset" VALUE=Отменить></div>
+            <div ><INPUT type=SUBMIT VALUE=Отправить></div>
         </h4>
     </form>
     <? endif; ?>

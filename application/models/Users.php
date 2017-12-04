@@ -32,14 +32,12 @@ class Users extends Object
             $oQuery = Object::$db->prepare("SELECT * FROM {$table} WHERE email=:need_email AND login!=:need_login");
             $oQuery->execute(['need_email' => $params['email'],'need_login' => $params['login']]);
             $aRes = $oQuery->fetchAll(PDO::FETCH_ASSOC);
-            var_dump(3);
             return $aRes? false:true;
        }
         else {
            $oQuery = Object::$db->prepare("SELECT * FROM {$table} WHERE email=:need_email");
             $oQuery->execute(['need_email' => $params['email']]);
             $aRes = $oQuery->fetchAll(PDO::FETCH_ASSOC);
-            var_dump(4);
             return $aRes? false:true;
 
         }
@@ -210,7 +208,6 @@ class Users extends Object
          }
          if ((array_key_exists('login',$paramsForSave))&&(count($paramsForSave)==count($columnNames))) {
              if ($class::findById($paramsForSave['login']) ) {
-                 var_dump(1);
                  if (($class::CheckUniqueness($paramsForSave,1))&&($class::CheckExistence($paramsForSave))&& ($rights==null)) {
                      var_dump(" Передан для обновления");
                      return $class::updateRecord($paramsForSave);
@@ -222,7 +219,6 @@ class Users extends Object
                  }
              }
              else {
-                 var_dump(2);
                  if (($class::CheckUniqueness($paramsForSave,0))&&($class::CheckExistence($paramsForSave))) {
                      var_dump(" Передан для добавления");
                      return $class::addRecord($paramsForSave);
@@ -276,6 +272,7 @@ class Users extends Object
     static function getList ($mylittleuser,$verified_admin){
         $aData=[];
         $aData['title']="";
+        $aData['items']=[];
         if (Users::findById($mylittleuser->login)->admin_rights==1) {
             switch ($verified_admin){
                 case 1:
@@ -326,9 +323,9 @@ class Users extends Object
                         $string= ['adminr','locking','delete'];
                     }
                 }
-                $aData['items'][] = ['title' => $oCategories->login,'buttons'=>$string,'back'=>$_SERVER['REQUEST_URI'].'','id'=> $oCategories->login];
+                $aData['items'][] = ['title' => $oCategories->login,'buttons'=>$string,'back'=>Object::deleteEndURL('func').'','id'=> $oCategories->login];
             }
-            if(count($aRes)<1) $aData['title']="Нет подходящих пользователей";
+            if(count($aRes)<1) {$aData['title']="Нет подходящих пользователей";$aData['items']=[];}
         }
         else {
             var_dump("У Вас нет таких прав, и я Вам ничего не должен!");

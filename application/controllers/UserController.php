@@ -43,30 +43,33 @@ class UserController extends MainController
         $this->aContent[] = new ContentCategories(new Users(),$this->mylittleuser, $this->category,'content_categories.php');
 
     }
+    protected function funcDelete($pa_m,$className){
+        $new=$className::findById($pa_m);
+        $answer=$className::deleteById($pa_m);
+        if ($new->login==$this->mylittleuser->login)  $this->mylittleuser=null;
+        $answer?var_dump("Удаление успешно выполнено"):var_dump("Удаление выполнить не удалось");
+    }
 
     protected function funcAdminr($pa_m,$className){
-        var_dump("Админ, Я ВЕСЬ ТВОЙ! Ghbdnt ");
         $this->sayMe($pa_m,$className,1,0,"Права админа ","даны");
     }
     protected function funcUser($pa_m,$className){
-        var_dump("Админ, Я ВЕСЬ ТВОЙ! Ghbdnt ");
         $this->sayMe($pa_m,$className,0,0,"Обычные права ","даны");
-
     }
     protected function funcLocking($pa_m,$className){
-        var_dump("Админ, Я ВЕСЬ ТВОЙ! Ghbdnt ");
         $this->sayMe($pa_m,$className,0,1,"Пользователь ","забанен");
     }
     protected function sayMe($pa_m,$className,$admin_rights,$locking,$string1,$string2){
         $new=$className::findById($pa_m);
         $new->admin_rights=$admin_rights;
         $new->locking=$locking;
+        if (($new->login==$this->mylittleuser->login) && ($new->admin_rights==0)) $this->mylittleuser->admin_rights==0;
+        if (($new->login==$this->mylittleuser->login) &&  ($new->locking==1)) $this->mylittleuser=null;
         $paramForSave=[];
         $ar=(array)$new;
         foreach ( $ar as $value1){
             foreach ( $value1 as $name=>$value) {
                 $paramForSave[$name]=$value;
-                var_dump("$name ---- $value <br>");
             }
         }
 
@@ -79,6 +82,7 @@ class UserController extends MainController
             $func=$_GET['func'];
             if ($this->mylittleuser->admin_rights==1){
                 //АДМИН
+                var_dump("Админ, Я ВЕСЬ ТВОЙ!");
                 //делай функцию
                 $buttons=['delete','locking','adminr','user'];
                 foreach ($buttons as $value)
