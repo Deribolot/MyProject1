@@ -25,12 +25,13 @@ class LoginController extends Controller
                 //обраюотка данных
                 $login = $_POST['login'];
                 $password = $_POST['password'];
-                if ((Users::findById($login)->user_password == $password) && (Users::findById($login)->locking == 0)) {
+                $secret = "Xdgd99DFd9Z"; // Секретное слово
+                if ((Users::findById($login)->user_password == md5($password.$secret)) && (Users::findById($login)->locking == 0)) {
                     $this->message = 'Добро пожаловать,' . $login . '!';
                     $this->mylittleuser = Users::findById($login);
                     $this->actionIndex(0);
 
-                } elseif ((Users::findById($login)->user_password == $password) && (Users::findById($login)->locking == 1)) {
+                } elseif ((Users::findById($login)->user_password == md5($password.$secret)) && (Users::findById($login)->locking == 1)) {
                     $this->message = 'Поздравляю, ' . $login . '! Ты забанен:)';
                     $this->mylittleuser = null;
                     $this->actionIndex(0);

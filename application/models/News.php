@@ -273,10 +273,12 @@ WHERE  news.login_autor=:need_login AND categories.id=:need_id_category");
                 $oQuery->execute();
                 $aRes = "";
                 foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues) {
-                    $aRes .= ((new Categories($aValues))->name) .', ';
+                    $aRes .= ((new Categories($aValues))->name);
+                    ((new Categories($aValues))->verified_admin==0)?$aRes .=$v_a:$aRes .="";
+                    $aRes .=', ';
                 }
                 $aRes=substr ( $aRes, 0 , strlen ( $aRes)-2);
-                if ($aRes) $stringNames["sheet"][] = "в категории(иях): ".$aRes.$v_a."</br>";
+                if ($aRes) $stringNames["sheet"][] = "в категории(иях): ".$aRes."</br>";
                 //ВЫКИНУТЬ В МЕНЮ
                 $stringNames["sheet"][] = "с id ".$this->id."</br>";
                 if ($verified_admin===1){
@@ -318,10 +320,10 @@ WHERE  news.login_autor=:need_login AND categories.id=:need_id_category");
                         $oQuery->execute();
                         $aRes = "";
                         foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues) {
-                            $aRes .= ((new Categories($aValues))->name) .', ';
+                            $aRes .= ((new Categories($aValues))->name) .((new Categories($aValues))->verified_admin==0)?$v_a:"".', ';
                         }
                         $aRes=substr ( $aRes, 0 , strlen ( $aRes)-2);
-                        if ($aRes) $stringNames["sheet"][] = "в категории(иях): ".$aRes.$v_a."</br>";
+                        if ($aRes) $stringNames["sheet"][] = "в категории(иях): ".$aRes."</br>";
                     }else{
                         $oQuery = self::$db->prepare("SELECT DISTINCT  categories.* FROM  categories
                 INNER JOIN relationships on  categories.id = id_category 
@@ -354,10 +356,12 @@ WHERE  news.login_autor=:need_login AND categories.id=:need_id_category");
                         $oQuery->execute();
                         $aRes = "";
                         foreach ($oQuery->fetchAll(PDO::FETCH_ASSOC) as $aValues) {
-                            $aRes .= ((new Categories($aValues))->name) .', ';
+                            $aRes .= ((new Categories($aValues))->name);
+                             ((new Categories($aValues))->verified_admin==0)?$aRes .=$v_a:$aRes .="";
+                            $aRes .=', ';
                         }
                         $aRes=substr ( $aRes, 0 , strlen ( $aRes)-2);
-                        if ($aRes) $stringNames["sheet"][] = "в категории(иях): ".$aRes.$v_a."</br>";
+                        if ($aRes) $stringNames["sheet"][] = "в категории(иях): ".$aRes."</br>";
                         $stringNames["sheet"][] = "ее статус - ".(($this->verified_admin==0)?"не проверена":"проверена")." админом</br>";
                         $stringNames["buttons"]["delete"] = $adress.'&func='.$this->id.'delete';
                     }

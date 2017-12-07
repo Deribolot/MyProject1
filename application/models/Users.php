@@ -201,6 +201,10 @@ class Users extends Object
          foreach ($params as $param_name => $param_value) {
              foreach ($columnNames as $column_name => $column_value) {
                  if ($column_value == $param_name) {
+                     if ($column_value=='user_password'){
+                         $secret = "Xdgd99DFd9Z"; // Секретное слово
+                         $param_value= md5($param_value.$secret); // Результат хэширования
+                     }
                      //массив из принятых параметров с ключами - (столбцами таблицы)
                      $paramsForSave[$column_value] =  $param_value;
                  }

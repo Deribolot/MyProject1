@@ -29,4 +29,4 @@ require_once 'application/bootstrap.php';
 header("Content-Type: text/html; charset=utf-8");
 
 //запуск маршрутизатора
-Route::start();
+Route::start(по);
